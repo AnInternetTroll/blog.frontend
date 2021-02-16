@@ -5,6 +5,7 @@ function Assbook({ Component, pageProps }) {
 	return (
 		<>
 			<Navbar />
+			<br/>
 			<Component {...pageProps} />
 		</>
 	);

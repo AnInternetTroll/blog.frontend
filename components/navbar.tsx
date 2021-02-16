@@ -1,16 +1,14 @@
 import {
 	Navbar,
 	Nav,
-	Form,
-	FormControl,
-	Button,
 	NavDropdown,
+	Container,
 } from "react-bootstrap";
 
 function NavigationBar() {
 	return (
-		<div>
-			<Navbar bg="light" expand="lg">
+		<Navbar bg="primary" variant="dark" expand="md">
+			<Container fluid={false}>
 				<Navbar.Brand href="/">Assbook</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
@@ -29,13 +27,9 @@ function NavigationBar() {
 							</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
-					<Form inline>
-						<FormControl type="text" placeholder="Search" className="mr-sm-2" />
-						<Button variant="outline-success">Search</Button>
-					</Form>
 				</Navbar.Collapse>
-			</Navbar>
-		</div>
+			</Container>
+		</Navbar>
 	);
 }
 export default NavigationBar;
