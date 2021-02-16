@@ -1,9 +1,9 @@
 import Head from "next/head";
-import { User as UserInterface, Blog as BlogInterface } from "../../models/api";
-import { Container, Row, Col, Card, Button, ListGroup } from "react-bootstrap";
+import { User as UserInterface, Blog as BlogInterface } from "../../../models/api";
+import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
 
 import "jdenticon/dist/jdenticon";
-function User({ user, blogs, err }: { user: UserInterface, blogs: BlogInterface[], err: any }) {
+function Blog({ user, blogs, err }) {
 	if (err) return <p>Something went wrong</p>;
 	return (
 		<Container>
@@ -66,18 +66,18 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-	const { user } = params;
+	const { user, blog } = params;
 	const userRes = await fetch(`${process.env.base_url}/users/${user}`);
-	const blogs = await fetch(`${process.env.base_url}/blogs/${user}`);
+	const blogRes = await fetch(`${process.env.base_url}/blogs/${user}/${blog}`);
 	if (userRes.ok)
 		return {
 			props: {
 				user: (await userRes.json()) as UserInterface,
-				blogs: (await blogs.json()) as BlogInterface[],
+				blog: (await blogRes.json()) as BlogInterface,
 				err: null,
 			},
 		};
 	else return { props: { user: null, err: user.status } };
 }
 
-export default User;
+export default Blog;

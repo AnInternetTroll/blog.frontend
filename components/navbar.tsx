@@ -1,9 +1,4 @@
-import {
-	Navbar,
-	Nav,
-	NavDropdown,
-	Container,
-} from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 
 function NavigationBar() {
 	return (
