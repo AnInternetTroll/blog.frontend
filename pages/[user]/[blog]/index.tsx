@@ -1,68 +1,29 @@
 import Head from "next/head";
 import { User as UserInterface, Blog as BlogInterface } from "../../../models/api";
 import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
-
+import marked from "marked";
+import sanitize from "insane";
 import "jdenticon/dist/jdenticon";
-function Blog({ user, blogs, err }) {
+
+function Blog({ user, blog, err }) {
 	if (err) return <p>Something went wrong</p>;
 	return (
 		<Container>
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
-			<Row>
-				{/* The profile card */}
-				<Col sm={4}>
-					<Card>
-						<canvas
-							width="300px"
-							height="300px"
-							data-jdenticon-value={user.username}
-						/>
-						<Card.Body>
-							<Card.Title>{user.username}</Card.Title>
-							<Card.Text>{user.bio}</Card.Text>
-							<ListGroup variant="flush">
-								<ListGroup.Item>
-									Joined on {new Date(user.created_at).toDateString()}
-								</ListGroup.Item>
-								<ListGroup.Item>ID : {user.id}</ListGroup.Item>
-							</ListGroup>
-						</Card.Body>
-					</Card>
-				</Col>
-				{/* The body card */}
-				<Col sm={8}>
-					<Card>
-						<Card.Body>
-							<Row md={2}>
-								{blogs.length !== 0
-									? blogs.map((blog, index) => (
-											<Col key={blog.short_name}>
-												<Card>
-													<Card.Header>
-														<a href={`/${user.username}/${blog.short_name}`}>
-															{blog.name}
-														</a>
-													</Card.Header>
-													<Card.Body>{blog.description}</Card.Body>
-													<Card.Footer>{blog.id}</Card.Footer>
-												</Card>
-												<br />
-											</Col>
-									  ))
-									: "No blogs found"}
-							</Row>
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
+				<Card>
+					<Card.Header>
+						{blog.name}
+					</Card.Header>
+					<Card.Body dangerouslySetInnerHTML={{__html: sanitize(marked(blog.data))}}/>
+				</Card>
 		</Container>
 	);
 }
 
 export async function getStaticPaths() {
-	return { paths: [{ params: { user: "archive" } }], fallback: "blocking" };
+	return { paths: [{ params: { user: "archive", blog: "" } }], fallback: "blocking" };
 }
 
 export async function getStaticProps({ params }) {
