@@ -1,5 +1,8 @@
 import Head from "next/head";
-import { User as UserInterface, Blog as BlogInterface } from "../../../models/api";
+import {
+	User as UserInterface,
+	Blog as BlogInterface,
+} from "../../../models/api";
 import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
 import marked from "marked";
 import sanitize from "insane";
@@ -12,24 +15,31 @@ function Blog({ user, blog, err }) {
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
-				<Card>
-					<Card.Header>
-						{blog.name}
-					</Card.Header>
-					<Card.Body dangerouslySetInnerHTML={{__html: sanitize(marked(blog.data))}}/>
-				</Card>
+			<Card>
+				<Card.Header>{blog.name}</Card.Header>
+				<Card.Body
+					dangerouslySetInnerHTML={{
+						__html: sanitize(marked(blog.data)),
+					}}
+				/>
+			</Card>
 		</Container>
 	);
 }
 
 export async function getStaticPaths() {
-	return { paths: [{ params: { user: "archive", blog: "" } }], fallback: "blocking" };
+	return {
+		paths: [{ params: { user: "archive", blog: "" } }],
+		fallback: "blocking",
+	};
 }
 
 export async function getStaticProps({ params }) {
 	const { user, blog } = params;
 	const userRes = await fetch(`${process.env.base_url}/users/${user}`);
-	const blogRes = await fetch(`${process.env.base_url}/blogs/${user}/${blog}`);
+	const blogRes = await fetch(
+		`${process.env.base_url}/blogs/${user}/${blog}`
+	);
 	if (userRes.ok)
 		return {
 			props: {

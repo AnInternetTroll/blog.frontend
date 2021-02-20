@@ -3,7 +3,15 @@ import { User as UserInterface, Blog as BlogInterface } from "../../models/api";
 import { Container, Row, Col, Card, Button, ListGroup } from "react-bootstrap";
 
 import "jdenticon/dist/jdenticon";
-function User({ user, blogs, err }: { user: UserInterface, blogs: BlogInterface[], err: any }) {
+function User({
+	user,
+	blogs,
+	err,
+}: {
+	user: UserInterface;
+	blogs: BlogInterface[];
+	err: any;
+}) {
 	if (err) return <p>Something went wrong</p>;
 	return (
 		<Container>
@@ -24,7 +32,8 @@ function User({ user, blogs, err }: { user: UserInterface, blogs: BlogInterface[
 							<Card.Text>{user.bio}</Card.Text>
 							<ListGroup variant="flush">
 								<ListGroup.Item>
-									Joined on {new Date(user.created_at).toDateString()}
+									Joined on{" "}
+									{new Date(user.created_at).toDateString()}
 								</ListGroup.Item>
 								<ListGroup.Item>ID : {user.id}</ListGroup.Item>
 							</ListGroup>
@@ -41,12 +50,18 @@ function User({ user, blogs, err }: { user: UserInterface, blogs: BlogInterface[
 											<Col key={blog.short_name}>
 												<Card>
 													<Card.Header>
-														<a href={`/${user.username}/${blog.short_name}`}>
+														<a
+															href={`/${user.username}/${blog.short_name}`}
+														>
 															{blog.name}
 														</a>
 													</Card.Header>
-													<Card.Body>{blog.description}</Card.Body>
-													<Card.Footer>{blog.id}</Card.Footer>
+													<Card.Body>
+														{blog.description}
+													</Card.Body>
+													<Card.Footer>
+														{blog.id}
+													</Card.Footer>
 												</Card>
 												<br />
 											</Col>
