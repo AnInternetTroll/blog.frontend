@@ -14,7 +14,7 @@ function User({
 }) {
 	if (err) return <p>Something went wrong</p>;
 	return (
-		<Container>
+		<>
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
@@ -72,7 +72,7 @@ function User({
 					</Card>
 				</Col>
 			</Row>
-		</Container>
+		</>
 	);
 }
 

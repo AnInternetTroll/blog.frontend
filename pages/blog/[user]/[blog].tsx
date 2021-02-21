@@ -11,7 +11,7 @@ import "jdenticon/dist/jdenticon";
 function Blog({ user, blog, err }) {
 	if (err) return <p>Something went wrong</p>;
 	return (
-		<Container>
+		<>
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
@@ -23,7 +23,7 @@ function Blog({ user, blog, err }) {
 					}}
 				/>
 			</Card>
-		</Container>
+		</>
 	);
 }
 

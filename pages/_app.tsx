@@ -1,7 +1,9 @@
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "../components/navbar";
 import Head from "next/head";
+import { Container } from "react-bootstrap";
+
+import Navbar from "../components/navbar";
 
 function Assbook({ Component, pageProps }) {
 	return (
@@ -11,7 +13,9 @@ function Assbook({ Component, pageProps }) {
 			</Head>
 			<Navbar />
 			<br />
-			<Component {...pageProps} />
+			<Container>
+				<Component {...pageProps} />
+			</Container>
 		</>
 	);
 }
