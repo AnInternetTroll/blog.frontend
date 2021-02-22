@@ -6,12 +6,11 @@ import { useState } from "react";
 export default function Login() {
 	const [feedback, setFeedback] = useState("");
 	function componentDidMount() {
-    fetch(`${process.env.base_url}/users/luca`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setFeedback(JSON.stringify(result));
-        });
+		fetch(`${process.env.base_url}/users/luca`)
+			.then((res) => res.json())
+			.then((result) => {
+				setFeedback(JSON.stringify(result));
+			});
 	}
 	return (
 		<>
@@ -25,7 +24,7 @@ export default function Login() {
 						<Form.Control type="email" placeholder="Enter email" />
 						<Form.Label>Password</Form.Label>
 						<Form.Control type="password" placeholder="Password" />
-						<br/>
+						<br />
 						<Button type="submit">Login</Button>
 						<p>{feedback}</p>
 					</Form.Group>

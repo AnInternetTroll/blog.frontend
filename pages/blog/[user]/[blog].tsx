@@ -29,7 +29,7 @@ function Blog({ user, blog, err }) {
 
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { user: "archive", blog: "" } }],
+		paths: [{ params: { user: "archive", blog: "readme" } }],
 		fallback: "blocking",
 	};
 }

@@ -20,7 +20,7 @@ function User({
 			</Head>
 			<Row>
 				{/* The profile card */}
-				<Col sm={4}>
+				<Col lg={4}>
 					<Card>
 						<canvas
 							width="300px"
@@ -41,10 +41,10 @@ function User({
 					</Card>
 				</Col>
 				{/* The body card */}
-				<Col sm={8}>
+				<Col lg={8}>
 					<Card>
 						<Card.Body>
-							<Row md={2}>
+							<Row>
 								{blogs.length !== 0
 									? blogs.map((blog, index) => (
 											<Col key={blog.short_name}>

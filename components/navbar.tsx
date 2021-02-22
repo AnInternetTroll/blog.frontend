@@ -9,7 +9,8 @@ function NavigationBar() {
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="mr-auto">
 						<Nav.Link href="/">Home</Nav.Link>
-						<Nav.Link href="#link">Blogs</Nav.Link>
+						<Nav.Link href="/blogs">Blogs</Nav.Link>
+						<Nav.Link href="/users">Users</Nav.Link>
 						<NavDropdown title="Dropdown" id="basic-nav-dropdown">
 							<NavDropdown.Item href="#action/3.1">
 								Action
