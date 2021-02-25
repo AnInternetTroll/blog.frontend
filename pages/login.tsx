@@ -20,7 +20,7 @@ export default function Login() {
 			});
 			const login = await loginRes.json();
 			// @ts-ignore "Cannot find cookieStore" wtf typescript. https://wicg.github.io/cookie-store/
-			if (loginRes.ok) setCookie("token", login.token, login.expiresIn)
+			if (loginRes.ok) setCookie("token", login.token, login.expiresIn);
 			setLoginFeedback(login.message);
 		});
 	};
@@ -40,7 +40,8 @@ export default function Login() {
 				}
 			);
 			const register = await registerRes.json();
-			if (registerRes.ok) setCookie("token", register.token, register.expiresIn)
+			if (registerRes.ok)
+				setCookie("token", register.token, register.expiresIn);
 			setRegisterFeedback(register.message);
 		});
 	};
