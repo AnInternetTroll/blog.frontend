@@ -1,9 +1,6 @@
 import Head from "next/head";
-import {
-	User as UserInterface,
-	Blog as BlogInterface,
-} from "../../../models/api";
-import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
+import { Blog as BlogInterface } from "../../../models/api";
+import { Card } from "react-bootstrap";
 import marked from "marked";
 import sanitize from "insane";
 import "jdenticon/dist/jdenticon";
@@ -28,27 +25,41 @@ function Blog({ user, blog, err }) {
 }
 
 export async function getStaticPaths() {
+	const blogsRes = await fetch(`${process.env.base_url}/blogs?embed=author`);
+	const blogs = (await blogsRes.json()) as BlogInterface[];
+	const paths: {
+		params: { user: string; blog: string; err: null | Error };
+	}[] = [];
+	for (let i = 0, len = blogs.length; i < len; i++) {
+		paths[i] = {
+			params: {
+				user: blogs[i].author.username,
+				blog: blogs[i].short_name,
+				err: null,
+			},
+		};
+	}
 	return {
-		paths: [{ params: { user: "archive", blog: "readme" } }],
+		paths: paths,
 		fallback: "blocking",
 	};
 }
 
 export async function getStaticProps({ params }) {
 	const { user, blog } = params;
-	const userRes = await fetch(`${process.env.base_url}/users/${user}`);
 	const blogRes = await fetch(
-		`${process.env.base_url}/blogs/${user}/${blog}`
+		`${process.env.base_url}/blogs/${user}/${blog}?embed=author`
 	);
-	if (userRes.ok)
+	const blogObj = (await blogRes.json()) as BlogInterface;
+	if (blogRes.ok)
 		return {
 			props: {
-				user: (await userRes.json()) as UserInterface,
-				blog: (await blogRes.json()) as BlogInterface,
+				user: blogObj.author,
+				blog: blogObj,
 				err: null,
 			},
 		};
-	else return { props: { user: null, err: user.status } };
+	else return { props: { user: null, err: blogRes.statusText } };
 }
 
 export default Blog;

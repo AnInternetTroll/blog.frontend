@@ -21,5 +21,5 @@ export interface Blog {
 	short_name: string;
 	description: string;
 	data: string;
-	author: string;
+	author: User;
 }
