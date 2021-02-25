@@ -35,7 +35,9 @@ self.addEventListener("activate", (e) => {
 	);
 });
 
-self.addEventListener("fetch", (event) => {
+self.addEventListener("fetch", async (event) => {
+	event.request.headers.Authorization ??= `Bearer ${await cookieStore.get("token") || "no token here :("}`;
+	if (event.request.url.includes("api")) return fetch(event.request);
 	event.respondWith(
 		// Try the cache
 		caches

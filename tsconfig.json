@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es5",
-		"lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
+		"lib": ["dom", "dom.iterable", "esnext", "WebWorker", "ScriptHost"],
 		"allowJs": true,
 		"skipLibCheck": true,
 		"strict": false,
@@ -19,7 +19,7 @@
 		"**/*.ts",
 		"**/*.tsx",
 		"next.config.js",
-		"public/sw.js"
+		"public/sw.ts"
 	],
 	"exclude": ["node_modules"]
 }
