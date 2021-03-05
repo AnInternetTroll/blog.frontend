@@ -35,29 +35,36 @@ self.addEventListener("activate", (e) => {
 	);
 });
 
-self.addEventListener("fetch", async (event) => {
-	event.request.headers.Authorization ??= `Bearer ${
-		(await cookieStore.get("token")) || "no token here :("
-	}`;
-	if (event.request.url.includes("api")) return fetch(event.request);
-	event.respondWith(
-		// Try the cache
-		caches
-			.match(event.request)
-			.then((response) => {
-				if (response) {
-					return response;
-				}
-				return fetch(event.request).then((response) => {
-					if (response.status === 404) {
-						return caches.match("/404.html");
+self.addEventListener("fetch", (event) => {
+	cookieStore
+		.get("token")
+		.then((token) => {
+			event.request.headers.Authorization ??= `Bearer ${
+				token || "no token here :("
+			}`;
+		})
+		.catch((err) => console.log("cookieStore not supported ", err));
+	if (event.request.url.includes("/api"))
+		return event.respondWith(fetch(event.request));
+	else
+		return event.respondWith(
+			// Try the cache
+			caches
+				.match(event.request)
+				.then((response) => {
+					if (response) {
+						return response;
 					}
-					return response;
-				});
-			})
-			.catch(() => {
-				// If both fail, show a generic fallback:
-				return caches.match("/offline.html");
-			})
-	);
+					return fetch(event.request).then((response) => {
+						if (response.status === 404) {
+							return caches.match("/404.html");
+						}
+						return response;
+					});
+				})
+				.catch(() => {
+					// If both fail, show a generic fallback:
+					return caches.match("/offline.html");
+				})
+		);
 });

@@ -1,5 +1,8 @@
 import Head from "next/head";
-import { User as UserInterface, Blog as BlogInterface } from "../../models/api";
+import {
+	User as UserInterface,
+	Blog as BlogInterface,
+} from "../../../models/api";
 import { Row, Col, Card, ListGroup } from "react-bootstrap";
 
 import "jdenticon/dist/jdenticon";
@@ -36,6 +39,17 @@ function User({
 									{new Date(user.created_at).toDateString()}
 								</ListGroup.Item>
 								<ListGroup.Item>ID : {user.id}</ListGroup.Item>
+								{Object.keys(user.external).map(
+									(key, index) => {
+										user.external[key].url ? (
+											<ListGroup.Item>
+												{key}: {user.external[key].url}
+											</ListGroup.Item>
+										) : (
+											""
+										);
+									}
+								)}
 							</ListGroup>
 						</Card.Body>
 					</Card>
@@ -92,10 +106,13 @@ export async function getStaticProps({ params }) {
 		`${process.env.base_url}/blogs/${user}?embed=author`
 	);
 	const blogs = (await blogsRes.json()) as BlogInterface[];
+	const usersRes = await fetch(`${process.env.base_url}/users/${user}`);
 	if (blogsRes.ok)
 		return {
 			props: {
-				user: blogs[0].author,
+				user:
+					blogs[0]?.author ||
+					((await usersRes.json()) as UserInterface),
 				blogs,
 				err: null,
 			},
