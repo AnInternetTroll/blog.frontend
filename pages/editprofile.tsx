@@ -12,7 +12,10 @@ import { Component, FormEvent } from "react";
 
 import "jdenticon/dist/jdenticon";
 
-class EditProfile extends Component<null, { err: any; user: UserInterface, token: string }> {
+class EditProfile extends Component<
+	null,
+	{ err: any; user: UserInterface; token: string }
+> {
 	constructor(props: null) {
 		super(props);
 		this.state = {
@@ -24,47 +27,53 @@ class EditProfile extends Component<null, { err: any; user: UserInterface, token
 
 	editUser(e: FormEvent) {
 		e.preventDefault();
-		const formData = Object.fromEntries(new FormData(e.target as HTMLFormElement));
-		Object.keys(formData).forEach(key => {
+		const formData = Object.fromEntries(
+			new FormData(e.target as HTMLFormElement)
+		);
+		Object.keys(formData).forEach((key) => {
 			// @ts-ignore TypeScript may want this to be a string but the server will only accept booleans
 			if (formData[key] === "on") formData[key] = true;
 			// @ts-ignore So we hack our way into it
 			else if (formData[key] === "off") formData[key] = false;
-		})
+		});
 		fetch(`${process.env.base_url}/user`, {
 			method: "PATCH",
 			headers: {
-				Authorization: `Bearer ${document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2]}`,
+				Authorization: `Bearer ${
+					document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2]
+				}`,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(formData),
-		})
+		});
 	}
 
 	componentDidMount() {
-		let token: string;
-		try {
-			token = document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2];
-			this.setState({token});
-		} catch (err) {
-			token = "";
-			this.setState({token: ""});
-		}
-		console.log(this.state.token)
-		if (typeof window !== "undefined" && token) {
-			fetch(`${process.env.base_url}/user`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-				.then((res) => res.json() as Promise<UserInterface>)
-				.then((data) => {
-					this.setState({ user: data });
+		if (!localStorage.user) {
+			let token: string;
+			try {
+				token = document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2];
+				this.setState({ token });
+			} catch (err) {
+				token = "";
+				this.setState({ token: "" });
+			}
+			console.log(this.state.token);
+			if (typeof window !== "undefined" && token) {
+				fetch(`${process.env.base_url}/user`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
 				})
-				.catch((err) => {
-					this.setState({ err });
-				});
-		} else this.setState({err: `Wrong password ${this.state.token}`});
+					.then((res) => res.json() as Promise<UserInterface>)
+					.then((data) => {
+						this.setState({ user: data });
+					})
+					.catch((err) => {
+						this.setState({ err });
+					});
+			} else this.setState({ err: `Wrong password ${this.state.token}` });
+		} else this.setState({ user: JSON.parse(localStorage.user) });
 	}
 
 	render() {
@@ -98,7 +107,9 @@ class EditProfile extends Component<null, { err: any; user: UserInterface, token
 												<FormControl
 													name="username"
 													placeholder="Username"
-													defaultValue={this.state.user.username}
+													defaultValue={
+														this.state.user.username
+													}
 													aria-label="Username"
 												/>
 											</InputGroup>

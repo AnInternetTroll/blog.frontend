@@ -1,9 +1,8 @@
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
-import { Container } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 import { useEffect } from "react";
-
 import Navbar from "../components/navbar";
 
 function Assbook({ Component, pageProps }) {

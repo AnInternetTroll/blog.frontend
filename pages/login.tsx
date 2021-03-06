@@ -16,6 +16,15 @@ class Login extends Component<null, LoginInterface> {
 			registerFeedback: "",
 		};
 	}
+	async saveUser(token: string) {
+		const res = await fetch(`${process.env.base_url}/user`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		if (res.ok) localStorage.user = await res.text();
+		else localStorage.user = "";
+	}
 	setCookie(name: string, value: string, seconds = 3600) {
 		const d = new Date();
 		d.setTime(Date.now() + seconds * 100);
@@ -36,6 +45,7 @@ class Login extends Component<null, LoginInterface> {
 			if (loginRes.ok)
 				this.setCookie("token", login.token, login.expiresIn);
 			this.setState({ loginFeedback: login.message });
+			this.saveUser(login.token);
 		});
 	}
 	register(e: any) {
@@ -57,6 +67,7 @@ class Login extends Component<null, LoginInterface> {
 			if (registerRes.ok)
 				this.setCookie("token", register.token, register.expiresIn);
 			this.setState({ registerFeedback: register.message });
+			this.saveUser(register.token);
 		});
 	}
 	render() {
