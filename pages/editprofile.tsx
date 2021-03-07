@@ -8,24 +8,23 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Component, FormEvent } from "react";
+import {
+	Component,
+	FormEvent,
+	Dispatch,
+	SetStateAction,
+	useState,
+	useEffect,
+} from "react";
+import { useTracked, State } from "../components/state";
 
 import "jdenticon/dist/jdenticon";
 
-class EditProfile extends Component<
-	null,
-	{ err: any; user: UserInterface; token: string }
-> {
-	constructor(props: null) {
-		super(props);
-		this.state = {
-			err: null,
-			user: null,
-			token: null,
-		};
-	}
+function EditProfile() {
+	const [globalState, setGlobalState] = useTracked();
+	const [state, setState] = useState({ err: null });
 
-	editUser(e: FormEvent) {
+	const editUser = (e: FormEvent) => {
 		e.preventDefault();
 		const formData = Object.fromEntries(
 			new FormData(e.target as HTMLFormElement)
@@ -46,19 +45,16 @@ class EditProfile extends Component<
 			},
 			body: JSON.stringify(formData),
 		});
-	}
-
-	componentDidMount() {
-		if (!localStorage.user) {
+	};
+	/*
+	useEffect(() => {
+		if (!globalState.user) {
 			let token: string;
 			try {
-				token = document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2];
-				this.setState({ token });
+				token = document.cookie.match(/(^|;) ?token=([^;]*)(;|$)/)[2];
 			} catch (err) {
 				token = "";
-				this.setState({ token: "" });
 			}
-			console.log(this.state.token);
 			if (typeof window !== "undefined" && token) {
 				fetch(`${process.env.base_url}/user`, {
 					headers: {
@@ -67,125 +63,121 @@ class EditProfile extends Component<
 				})
 					.then((res) => res.json() as Promise<UserInterface>)
 					.then((data) => {
-						this.setState({ user: data });
+						setGlobalState((s) => ({ ...s, user: data }));
 					})
 					.catch((err) => {
-						this.setState({ err });
+						setState({ err });
 					});
-			} else this.setState({ err: `Wrong password ${this.state.token}` });
-		} else this.setState({ user: JSON.parse(localStorage.user) });
-	}
-
-	render() {
-		return (
-			<>
-				<Head>
-					<title>
-						{this.state.user?.username || "Loading"} - Assbook
-					</title>
-				</Head>
-				<Row>
-					{/* The profile card */}
-					<Col lg={4}>
-						<Form onSubmit={this.editUser}>
-							{this.state.user ? (
-								<Card>
-									{this.state.user.username ? (
-										<canvas
-											width="300px"
-											height="300px"
-											data-jdenticon-value={
-												this.state.user.username
-											}
-										/>
-									) : (
-										""
-									)}
-									<Card.Body>
-										<Card.Title>
-											<InputGroup>
-												<FormControl
-													name="username"
-													placeholder="Username"
-													defaultValue={
-														this.state.user.username
-													}
-													aria-label="Username"
-												/>
-											</InputGroup>
-										</Card.Title>
-										<Card.Text>
-											<InputGroup>
-												<FormControl
-													name="bio"
-													as="textarea"
-													aria-label="With textarea"
-													defaultValue={
-														this.state.user.bio
-													}
-													placeholder="None"
-												/>
-											</InputGroup>
-										</Card.Text>
-										<ListGroup variant="flush">
-											<ListGroup.Item>
-												Joined on{" "}
-												{new Date(
-													this.state.user.created_at
-												).toDateString()}
-											</ListGroup.Item>
-											<ListGroup.Item>
-												ID : {this.state.user.id}
-											</ListGroup.Item>
-											{Object.keys(
-												this.state.user.external
-											).map((key, index) => (
-												<ListGroup.Item key={key}>
-													{key}
-													<InputGroup>
-														<InputGroup.Prepend>
-															<InputGroup.Checkbox
-																name={`external.${key}.show`}
-																aria-label={`Show or hide URL of ${key}`}
-																defaultChecked={
-																	this.state
-																		.user
-																		.external[
-																		key
-																	].show
-																}
-															/>
-														</InputGroup.Prepend>
-														<FormControl
-															name={`external.${key}.url`}
-															aria-label={`${key} URL`}
-															placeholder="None"
-															defaultValue={
-																this.state.user
+			} else setState({ err: new Error(`Wrong password`) });
+		}
+	});
+	*/
+	return (
+		<>
+			<Head>
+				<title>
+					{globalState.user?.username || "Loading"} - Assbook
+				</title>
+			</Head>
+			<Row>
+				{/* The profile card */}
+				<Col lg={4}>
+					<Form onSubmit={editUser}>
+						{globalState.user ? (
+							<Card>
+								{globalState.user.username ? (
+									<canvas
+										width="300px"
+										height="300px"
+										data-jdenticon-value={
+											globalState.user.username
+										}
+									/>
+								) : (
+									""
+								)}
+								<Card.Body>
+									<Card.Title>
+										<InputGroup>
+											<FormControl
+												name="username"
+												placeholder="Username"
+												defaultValue={
+													globalState.user.username
+												}
+												aria-label="Username"
+											/>
+										</InputGroup>
+									</Card.Title>
+									<Card.Text>
+										<InputGroup>
+											<FormControl
+												name="bio"
+												as="textarea"
+												aria-label="With textarea"
+												defaultValue={
+													globalState.user.bio
+												}
+												placeholder="None"
+											/>
+										</InputGroup>
+									</Card.Text>
+									<ListGroup variant="flush">
+										<ListGroup.Item>
+											Joined on{" "}
+											{new Date(
+												globalState.user.created_at
+											).toDateString()}
+										</ListGroup.Item>
+										<ListGroup.Item>
+											ID : {globalState.user.id}
+										</ListGroup.Item>
+										{Object.keys(
+											globalState.user.external
+										).map((key, index) => (
+											<ListGroup.Item key={key}>
+												{key}
+												<InputGroup>
+													<InputGroup.Prepend>
+														<InputGroup.Checkbox
+															name={`external.${key}.show`}
+															aria-label={`Show or hide URL of ${key}`}
+															defaultChecked={
+																globalState.user
 																	.external[
 																	key
-																].url
+																].show
 															}
 														/>
-													</InputGroup>
-												</ListGroup.Item>
-											))}
-										</ListGroup>
-										<Button type="submit">Save</Button>
-									</Card.Body>
-								</Card>
-							) : this.state.err ? (
-								"Something has occured"
-							) : (
-								"Loading"
-							)}
-						</Form>
-					</Col>
-					<br />
-				</Row>
-			</>
-		);
-	}
+													</InputGroup.Prepend>
+													<FormControl
+														name={`external.${key}.url`}
+														aria-label={`${key} URL`}
+														placeholder="None"
+														defaultValue={
+															globalState.user
+																.external[key]
+																.url
+														}
+													/>
+												</InputGroup>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+									<Button type="submit">Save</Button>
+								</Card.Body>
+							</Card>
+						) : state.err ? (
+							`Something has occured ${state.err.message}`
+						) : (
+							"Loading"
+						)}
+					</Form>
+				</Col>
+				<br />
+			</Row>
+		</>
+	);
 }
 
 export default EditProfile;

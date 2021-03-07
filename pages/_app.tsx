@@ -4,6 +4,7 @@ import Head from "next/head";
 import Container from "react-bootstrap/Container";
 import { useEffect } from "react";
 import Navbar from "../components/navbar";
+import { Provider } from "../components/state";
 
 function Assbook({ Component, pageProps }) {
 	useEffect(() => {
@@ -27,7 +28,7 @@ function Assbook({ Component, pageProps }) {
 		}
 	}, []);
 	return (
-		<>
+		<Provider>
 			<Head>
 				<meta charSet="utf-8" />
 				<link rel="manifest" href="/manifest.json" />
@@ -70,7 +71,7 @@ function Assbook({ Component, pageProps }) {
 			<Container>
 				<Component {...pageProps} />
 			</Container>
-		</>
+		</Provider>
 	);
 }
 

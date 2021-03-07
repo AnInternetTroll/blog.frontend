@@ -3,18 +3,15 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import { User as UserInterface } from "../models/api";
-import React, { useState } from "react";
+import { useEffect } from "react";
+import { useTracked } from "./state";
+import { deleteCookie } from "../components/utils";
 
 function NavigationBar() {
-	const [user, setUser]: [
-		UserInterface,
-		React.Dispatch<React.SetStateAction<UserInterface>>
-	] = useState(null);
-	if (typeof localStorage !== "undefined") {
-		if (!user) {
-			if (localStorage.user)
-				setUser(JSON.parse(localStorage.user) as UserInterface);
-			else if (document?.cookie) {
+	const [state, setState] = useTracked();
+	useEffect(() => {
+		if (!state.user && typeof document !== "undefined") {
+			if (document.cookie) {
 				let token: string;
 				try {
 					token = document.cookie.match(
@@ -27,8 +24,7 @@ function NavigationBar() {
 					})
 						.then((res) => res.json() as Promise<UserInterface>)
 						.then((data) => {
-							localStorage.user = JSON.stringify(data);
-							setUser(data);
+							setState((s) => ({ ...s, user: data }));
 						})
 						.catch(console.log);
 				} catch (err) {
@@ -36,12 +32,21 @@ function NavigationBar() {
 				}
 			}
 		}
-	}
+	});
 	return (
 		<>
 			<Navbar bg="primary" variant="dark" expand="md">
 				<Container fluid={false}>
-					<Navbar.Brand href="/">Assbook</Navbar.Brand>
+					<Navbar.Brand href="/">
+					<img
+						alt=""
+						src="/favicon.ico"
+						width="30"
+						height="30"
+						className="d-inline-block align-top"
+					/>
+						Assbook
+					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav className="mr-auto">
@@ -49,16 +54,30 @@ function NavigationBar() {
 							<Nav.Link href="/blogs">Blogs</Nav.Link>
 							<Nav.Link href="/users">Users</Nav.Link>
 						</Nav>
-						{user ? (
+						{state?.user ? (
 							<Nav>
-								<NavDropdown title={user.username} id="profile">
+								<NavDropdown
+									title={state.user.username}
+									id="profile"
+								>
 									<NavDropdown.Item href="/editprofile">
 										Settings
+									</NavDropdown.Item>
+									<NavDropdown.Divider />
+									<NavDropdown.Item onClick={() => {
+										deleteCookie("token")
+										setState((s) => ({...s, user: null}))
+										}}>
+										Logout
 									</NavDropdown.Item>
 								</NavDropdown>
 							</Nav>
 						) : (
-							""
+							<Nav>
+								<Nav.Link href="/login">
+									Login/Register
+								</Nav.Link>
+							</Nav>
 						)}
 					</Navbar.Collapse>
 				</Container>

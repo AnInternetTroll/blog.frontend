@@ -1,38 +1,47 @@
 import Head from "next/head";
 import { Button, Form, Row } from "react-bootstrap";
 import { sha256 } from "../components/utils";
-import { Component } from "react";
+import { useTracked, State } from "../components/state";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface LoginInterface {
-	loginFeedback: string;
-	registerFeedback: string;
+	loginFeedback?: string;
+	registerFeedback?: string;
 }
 
-class Login extends Component<null, LoginInterface> {
-	constructor(props: null) {
-		super(props);
-		this.state = {
-			loginFeedback: "",
-			registerFeedback: "",
-		};
-	}
-	async saveUser(token: string) {
+function Login() {
+	const [state, setState]: [
+		LoginInterface,
+		Dispatch<SetStateAction<LoginInterface>>
+	] = useState({
+		loginFeedback: "",
+		registerFeedback: "",
+	});
+	const [globalState, setGlobalState]: [
+		State,
+		Dispatch<SetStateAction<State>>
+	] = useTracked();
+
+	const saveUser = async (token: string) => {
 		const res = await fetch(`${process.env.base_url}/user`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		});
-		if (res.ok) localStorage.user = await res.text();
-		else localStorage.user = "";
-	}
-	setCookie(name: string, value: string, seconds = 3600) {
+		const user = await res.json();
+		if (res.ok) setGlobalState((s) => ({ ...s, user }));
+		else setGlobalState((s) => ({ ...s, user: null }));
+	};
+
+	const setCookie = (name: string, value: string, seconds = 3600) => {
 		const d = new Date();
 		d.setTime(Date.now() + seconds * 100);
 		document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
-	}
-	login(e) {
+	};
+
+	const login = (e) => {
 		e.preventDefault();
-		const form = new FormData(document.querySelector("#login"));
+		const form = new FormData(e.target);
 		sha256(form.get("password").toString()).then(async (hash) => {
 			const loginRes = await fetch(`${process.env.base_url}/login`, {
 				headers: {
@@ -42,15 +51,15 @@ class Login extends Component<null, LoginInterface> {
 				},
 			});
 			const login = await loginRes.json();
-			if (loginRes.ok)
-				this.setCookie("token", login.token, login.expiresIn);
-			this.setState({ loginFeedback: login.message });
-			this.saveUser(login.token);
+			if (loginRes.ok) setCookie("token", login.token, login.expiresIn);
+			setState({ loginFeedback: login.message });
+			saveUser(login.token);
 		});
-	}
-	register(e: any) {
+	};
+
+	const register = (e: any) => {
 		e.preventDefault();
-		const form = new FormData(document.querySelector("#register"));
+		const form = new FormData(e.target);
 		sha256(form.get("password").toString()).then(async (hash) => {
 			const registerRes = await fetch(
 				`${process.env.base_url}/register`,
@@ -65,78 +74,74 @@ class Login extends Component<null, LoginInterface> {
 			);
 			const register = await registerRes.json();
 			if (registerRes.ok)
-				this.setCookie("token", register.token, register.expiresIn);
-			this.setState({ registerFeedback: register.message });
-			this.saveUser(register.token);
+				setCookie("token", register.token, register.expiresIn);
+			setState({ registerFeedback: register.message });
+			saveUser(register.token);
 		});
-	}
-	render() {
-		return (
-			<>
-				<Head>
-					<title>Login - Assbook</title>
-				</Head>
-				<h1>Login</h1>
-				<Row>
-					<Form
-						id="login"
-						onSubmit={(e) => {
-							this.login(e);
-						}}
-					>
-						<Form.Group>
-							<Form.Label>Username</Form.Label>
-							<Form.Control
-								name="username"
-								type="text"
-								placeholder="Enter Username"
-								autoComplete="username"
-							/>
-							<Form.Label>Password</Form.Label>
-							<Form.Control
-								name="password"
-								type="password"
-								placeholder="Password"
-								autoComplete="current-password"
-							/>
-							<br />
-							<Button type="submit">Login</Button>
-							<p>{this.state.loginFeedback}</p>
-						</Form.Group>
-					</Form>
-				</Row>
-				<hr />
-				<h1>Register</h1>
-				<Row>
-					<Form
-						id="register"
-						onSubmit={(e) => {
-							this.register(e);
-						}}
-					>
-						<Form.Group>
-							<Form.Label>Username</Form.Label>
-							<Form.Control
-								name="username"
-								type="text"
-								placeholder="Enter Username"
-								autoComplete="username"
-							/>
-							<Form.Label>Password</Form.Label>
-							<Form.Control
-								name="password"
-								type="password"
-								placeholder="Password"
-								autoComplete="new-password"
-							/>
-							<br />
-							<Button type="submit">Login</Button>
-							<p>{this.state.registerFeedback}</p>
-						</Form.Group>
-					</Form>
-				</Row>
-			</>
-		);
-	}
+	};
+	return (
+		<>
+			<Head>
+				<title>Login - Assbook</title>
+			</Head>
+			<h1>Login</h1>
+			<Row>
+				<Form
+					onSubmit={(e) => {
+						login(e);
+					}}
+				>
+					<Form.Group>
+						<Form.Label>Username</Form.Label>
+						<Form.Control
+							name="username"
+							type="text"
+							placeholder="Enter Username"
+							autoComplete="username"
+						/>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							name="password"
+							type="password"
+							placeholder="Password"
+							autoComplete="current-password"
+						/>
+						<br />
+						<Button type="submit">Login</Button>
+						<p>{state.loginFeedback}</p>
+					</Form.Group>
+				</Form>
+			</Row>
+			<hr />
+			<h1>Register</h1>
+			<Row>
+				<Form
+					onSubmit={(e) => {
+						register(e);
+					}}
+				>
+					<Form.Group>
+						<Form.Label>Username</Form.Label>
+						<Form.Control
+							name="username"
+							type="text"
+							placeholder="Enter Username"
+							autoComplete="username"
+						/>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							name="password"
+							type="password"
+							placeholder="Password"
+							autoComplete="new-password"
+						/>
+						<br />
+						<Button type="submit">Login</Button>
+						<p>{state.registerFeedback}</p>
+					</Form.Group>
+				</Form>
+			</Row>
+		</>
+	);
 }
 export default Login;
