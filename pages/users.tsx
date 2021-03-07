@@ -53,6 +53,7 @@ export async function getStaticProps() {
 				users: (await userRes.json()) as UserInterface[],
 				err: null,
 			},
+			revalidate: 30,
 		};
 	else return { props: { users: null, err: userRes.status } };
 }

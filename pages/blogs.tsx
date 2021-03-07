@@ -1,7 +1,8 @@
 import Head from "next/head";
 import { Blog as BlogInterface } from "../models/api";
-import { Row, Col, Card } from "react-bootstrap";
-
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 export default function Users({
 	blogs,
 	err,
@@ -46,6 +47,7 @@ export async function getStaticProps() {
 				blogs: (await blogsRes.json()) as BlogInterface[],
 				err: null,
 			},
+			revalidate: 30,
 		};
 	else return { props: { users: null, err: blogsRes.status } };
 }
