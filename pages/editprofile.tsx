@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { User as UserInterface } from "../models/api";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,21 +7,21 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
-import {
-	Component,
-	FormEvent,
-	Dispatch,
-	SetStateAction,
-	useState,
-	useEffect,
-} from "react";
-import { useTracked, State } from "../components/state";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { useTracked } from "../components/state";
+import { sha256, deleteCookie, getCookie } from "../components/utils";
 
 import "jdenticon/dist/jdenticon";
-
+interface EditFeedback {
+	editFeedback?: string;
+	err?: Error;
+}
 function EditProfile() {
-	const [globalState, setGlobalState] = useTracked();
-	const [state, setState] = useState({ err: null });
+	const [globalState] = useTracked();
+	const [state, setState]: [
+		EditFeedback,
+		Dispatch<SetStateAction<EditFeedback>>
+	] = useState({ editFeedback: null, err: null });
 
 	const editUser = (e: FormEvent) => {
 		e.preventDefault();
@@ -38,40 +37,44 @@ function EditProfile() {
 		fetch(`${process.env.base_url}/user`, {
 			method: "PATCH",
 			headers: {
-				Authorization: `Bearer ${
-					document.cookie.match(`(^|;) ?token=([^;]*)(;|$)`)[2]
-				}`,
+				Authorization: `Bearer ${getCookie("token")}`,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(formData),
+		}).then(async (res) => {
+			if (res.ok) setState({ editFeedback: "Succesfully editted" });
+			else if (res.status === 403)
+				setState({ editFeedback: "Wrong password, please try again" });
+			else {
+				const json = await res.json();
+				setState({ editFeedback: json.message });
+			}
 		});
 	};
-	/*
-	useEffect(() => {
-		if (!globalState.user) {
-			let token: string;
-			try {
-				token = document.cookie.match(/(^|;) ?token=([^;]*)(;|$)/)[2];
-			} catch (err) {
-				token = "";
-			}
-			if (typeof window !== "undefined" && token) {
-				fetch(`${process.env.base_url}/user`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-					.then((res) => res.json() as Promise<UserInterface>)
-					.then((data) => {
-						setGlobalState((s) => ({ ...s, user: data }));
-					})
-					.catch((err) => {
-						setState({ err });
-					});
-			} else setState({ err: new Error(`Wrong password`) });
+	const deleteUser = async () => {
+		const password = prompt("Are you sure? Type in your password");
+		const res = await fetch(`${process.env.base_url}/user`, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${getCookie("token")}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				hash: await sha256(password),
+			}),
+		});
+		if (res.ok) {
+			window.location.href = "/";
+			deleteCookie("token");
+		} else if (res.status === 304)
+			setState({ editFeedback: "The user hasn't been deleted" });
+		else if (res.status === 403)
+			setState({ editFeedback: "Wrong password provided" });
+		else {
+			const json = await res.json();
+			setState({ editFeedback: json.message });
 		}
-	});
-	*/
+	};
 	return (
 		<>
 			<Head>
@@ -164,7 +167,17 @@ function EditProfile() {
 											</ListGroup.Item>
 										))}
 									</ListGroup>
+									{state.editFeedback}
+									<br />
 									<Button type="submit">Save</Button>
+									{"	"}
+									<Button
+										type="button"
+										variant="danger"
+										onClick={deleteUser}
+									>
+										Delete
+									</Button>
 								</Card.Body>
 							</Card>
 						) : state.err ? (

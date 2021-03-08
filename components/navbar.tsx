@@ -38,13 +38,13 @@ function NavigationBar() {
 			<Navbar bg="primary" variant="dark" expand="md">
 				<Container fluid={false}>
 					<Navbar.Brand href="/">
-					<img
-						alt=""
-						src="/favicon.ico"
-						width="30"
-						height="30"
-						className="d-inline-block align-top"
-					/>
+						<img
+							alt=""
+							src="/favicon.ico"
+							width="30"
+							height="30"
+							className="d-inline-block align-top"
+						/>
 						Assbook
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -64,10 +64,15 @@ function NavigationBar() {
 										Settings
 									</NavDropdown.Item>
 									<NavDropdown.Divider />
-									<NavDropdown.Item onClick={() => {
-										deleteCookie("token")
-										setState((s) => ({...s, user: null}))
-										}}>
+									<NavDropdown.Item
+										onClick={() => {
+											deleteCookie("token");
+											setState((s) => ({
+												...s,
+												user: null,
+											}));
+										}}
+									>
 										Logout
 									</NavDropdown.Item>
 								</NavDropdown>
