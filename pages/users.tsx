@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { User as UserInterface } from "../models/api";
-import { Row, Col, Card } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import CardColumns from "react-bootstrap/CardColumns";
 import { Component } from "react";
 
 class User extends Component<
@@ -23,22 +25,22 @@ class User extends Component<
 					<title>Users - Assbook</title>
 				</Head>
 				<Row>
+				<CardColumns>
 					{this.state.users.length !== 0
 						? this.state.users.map((user, index) => (
-								<Col key={user.username}>
-									<Card>
+									<Card key={user.username}>
 										<Card.Header>
+											<h4>
 											<a href={`/${user.username}`}>
 												{user.username}
 											</a>
+											</h4>
 										</Card.Header>
 										<Card.Body>{user.bio}</Card.Body>
-										<Card.Footer>{user.id}</Card.Footer>
 									</Card>
-									<br />
-								</Col>
 						  ))
 						: "No users found"}
+						</CardColumns>
 				</Row>
 			</>
 		);

@@ -41,7 +41,7 @@ export async function getStaticPaths() {
 	}
 	return {
 		paths: paths,
-		fallback: "blocking",
+		fallback: true,
 	};
 }
 
@@ -58,6 +58,7 @@ export async function getStaticProps({ params }) {
 				blog: blogObj,
 				err: null,
 			},
+			revalidate: 30,
 		};
 	else return { props: { user: null, err: blogRes.statusText } };
 }

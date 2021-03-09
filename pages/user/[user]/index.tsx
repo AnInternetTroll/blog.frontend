@@ -97,7 +97,7 @@ export async function getStaticPaths() {
 	for (let i = 0, len = users.length; i < len; i++) {
 		paths[i] = { params: { user: users[i].username, err: null } };
 	}
-	return { paths, fallback: "blocking" };
+	return { paths, fallback: true };
 }
 
 export async function getStaticProps({ params }) {
@@ -116,6 +116,7 @@ export async function getStaticProps({ params }) {
 				blogs,
 				err: null,
 			},
+			revalidate: 30,
 		};
 	else return { props: { user: null, err: blogsRes.statusText } };
 }
