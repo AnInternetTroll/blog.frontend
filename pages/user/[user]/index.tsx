@@ -3,9 +3,12 @@ import {
 	User as UserInterface,
 	Blog as BlogInterface,
 } from "../../../models/api";
-import { Row, Col, Card, ListGroup } from "react-bootstrap";
-
+import ListGroup from "react-bootstrap/ListGroup";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
 import "jdenticon/dist/jdenticon";
+
 function User({
 	user,
 	blogs,

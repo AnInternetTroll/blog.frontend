@@ -9,22 +9,17 @@ import { Provider } from "../components/state";
 function Assbook({ Component, pageProps }) {
 	useEffect(() => {
 		if ("serviceWorker" in navigator) {
-			window.addEventListener("load", function () {
+			window.addEventListener("load", () =>
 				navigator.serviceWorker.register("/sw.js").then(
-					function (registration) {
+					(registration) =>
 						console.log(
 							"Service Worker registration successful with scope: ",
 							registration.scope
-						);
-					},
-					function (err) {
-						console.log(
-							"Service Worker registration failed: ",
-							err
-						);
-					}
-				);
-			});
+						),
+					(err) =>
+						console.log("Service Worker registration failed: ", err)
+				)
+			);
 		}
 	}, []);
 	return (

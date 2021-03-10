@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { Blog as BlogInterface } from "../../../models/api";
-import { Card } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
 import marked from "marked";
 import sanitize from "insane";
 import "jdenticon/dist/jdenticon";
