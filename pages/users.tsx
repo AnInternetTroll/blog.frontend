@@ -25,22 +25,22 @@ class User extends Component<
 					<title>Users - Assbook</title>
 				</Head>
 				<Row>
-				<CardColumns>
-					{this.state.users.length !== 0
-						? this.state.users.map((user, index) => (
+					<CardColumns className="">
+						{this.state.users.length !== 0
+							? this.state.users.map((user, index) => (
 									<Card key={user.username}>
 										<Card.Header>
 											<h4>
-											<a href={`/${user.username}`}>
-												{user.username}
-											</a>
+												<a href={`/${user.username}`}>
+													{user.username}
+												</a>
 											</h4>
 										</Card.Header>
 										<Card.Body>{user.bio}</Card.Body>
 									</Card>
-						  ))
-						: "No users found"}
-						</CardColumns>
+							  ))
+							: "No users found"}
+					</CardColumns>
 				</Row>
 			</>
 		);

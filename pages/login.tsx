@@ -1,5 +1,7 @@
 import Head from "next/head";
-import { Button, Form, Row } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { sha256 } from "../components/utils";
 import { useTracked, State } from "../components/state";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -60,6 +62,7 @@ function Login() {
 	const register = (e: any) => {
 		e.preventDefault();
 		const form = new FormData(e.target);
+		if (form.get("password").toString() !== form.get("password_confirm").toString()) return setState({registerFeedback: "Passwords don't match"});
 		sha256(form.get("password").toString()).then(async (hash) => {
 			const registerRes = await fetch(
 				`${process.env.base_url}/register`,
@@ -98,6 +101,8 @@ function Login() {
 							type="text"
 							placeholder="Enter Username"
 							autoComplete="username"
+							required
+							pattern="^(?!-)[a-z0-9-]+(?<!-)(/(?!-)[a-z0-9-]+(?<!-))*(/(?!-\.)[a-z0-9-\.]+(?<!-\.))?$"
 						/>
 						<Form.Label>Password</Form.Label>
 						<Form.Control
@@ -105,6 +110,7 @@ function Login() {
 							type="password"
 							placeholder="Password"
 							autoComplete="current-password"
+							required
 						/>
 						<br />
 						<Button type="submit">Login</Button>
@@ -127,6 +133,8 @@ function Login() {
 							type="text"
 							placeholder="Enter Username"
 							autoComplete="username"
+							required
+							pattern="^(?!-)[a-z0-9-]+(?<!-)(/(?!-)[a-z0-9-]+(?<!-))*(/(?!-\.)[a-z0-9-\.]+(?<!-\.))?$"
 						/>
 						<Form.Label>Password</Form.Label>
 						<Form.Control
@@ -134,6 +142,15 @@ function Login() {
 							type="password"
 							placeholder="Password"
 							autoComplete="new-password"
+							required
+						/>
+						<Form.Label>Type the password again</Form.Label>
+						<Form.Control
+							name="password_confirm"
+							type="password"
+							placeholder="Password"
+							autoComplete="current-password"
+							required
 						/>
 						<br />
 						<Button type="submit">Login</Button>

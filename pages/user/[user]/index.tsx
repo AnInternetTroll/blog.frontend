@@ -97,7 +97,7 @@ export async function getStaticPaths() {
 	for (let i = 0, len = users.length; i < len; i++) {
 		paths[i] = { params: { user: users[i].username, err: null } };
 	}
-	return { paths, fallback: true };
+	return { paths, fallback: "blocking" };
 }
 
 export async function getStaticProps({ params }) {
