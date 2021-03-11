@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import "jdenticon/dist/jdenticon";
+import * as SimpleIcons from "react-icons/si";
 
 function User({
 	user,
@@ -42,16 +43,23 @@ function User({
 									{new Date(user.created_at).toDateString()}
 								</ListGroup.Item>
 								<ListGroup.Item>ID : {user.id}</ListGroup.Item>
-								{Object.keys(user.external).map(
-									(key, index) => {
-										user.external[key].url ? (
-											<ListGroup.Item>
-												{key}: {user.external[key].url}
-											</ListGroup.Item>
-										) : (
-											""
-										);
-									}
+								{Object.keys(user.external).map((key) =>
+									user.external[key].show &&
+									user.external[key].url ? (
+										<ListGroup.Item key={key}>
+											<a href={user.external[key].url}>
+												{SimpleIcons[
+													`Si${key.replace(
+														/^\w/,
+														(c) => c.toUpperCase()
+													)}`
+												]()}{" "}
+												{key}
+											</a>
+										</ListGroup.Item>
+									) : (
+										""
+									)
 								)}
 							</ListGroup>
 						</Card.Body>
@@ -109,13 +117,14 @@ export async function getStaticProps({ params }) {
 		`${process.env.base_url}/blogs/${user}?embed=author`
 	);
 	const blogs = (await blogsRes.json()) as BlogInterface[];
-	const usersRes = await fetch(`${process.env.base_url}/users/${user}`);
 	if (blogsRes.ok)
 		return {
 			props: {
 				user:
 					blogs[0]?.author ||
-					((await usersRes.json()) as UserInterface),
+					((await (
+						await fetch(`${process.env.base_url}/users/${user}`)
+					).json()) as UserInterface),
 				blogs,
 				err: null,
 			},

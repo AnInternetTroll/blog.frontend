@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { VscAccount } from "react-icons/vsc";
 import { User as UserInterface } from "../models/api";
 import {
 	Dispatch,
@@ -266,6 +267,7 @@ function NavigationBar() {
 							<Nav.Link href="/blogs">Blogs</Nav.Link>
 							<Nav.Link href="/users">Users</Nav.Link>
 						</Nav>
+						<VscAccount color="white" />
 						{stateGlobal.user ? (
 							<Nav>
 								<NavDropdown
