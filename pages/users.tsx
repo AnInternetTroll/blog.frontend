@@ -4,6 +4,8 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import CardColumns from "react-bootstrap/CardColumns";
 import { Component } from "react";
+import Jdenticon from "react-jdenticon";
+import styles from "../styles/Users.module.css";
 
 class User extends Component<
 	{
@@ -30,7 +32,21 @@ class User extends Component<
 							? this.state.users.map((user, index) => (
 									<Card key={user.username}>
 										<Card.Header>
-											<h4>
+											<h4
+												style={{
+													display: "inline-block",
+												}}
+											>
+												<span
+													className={
+														styles.profilePic
+													}
+												>
+													<Jdenticon
+														size="30"
+														value={user.id}
+													/>
+												</span>
 												<a href={`/${user.username}`}>
 													{user.username}
 												</a>

@@ -7,7 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import "jdenticon/dist/jdenticon";
+import Jdenticon from "react-jdenticon";
 import * as SimpleIcons from "react-icons/si";
 
 function User({
@@ -29,11 +29,7 @@ function User({
 				{/* The profile card */}
 				<Col lg={4}>
 					<Card>
-						<canvas
-							width="300px"
-							height="300px"
-							data-jdenticon-value={user.username}
-						/>
+						<Jdenticon size="300" value={user.username} />
 						<Card.Body>
 							<Card.Title>{user.username}</Card.Title>
 							<Card.Text>{user.bio}</Card.Text>
@@ -42,7 +38,9 @@ function User({
 									Joined on{" "}
 									{new Date(user.created_at).toDateString()}
 								</ListGroup.Item>
-								<ListGroup.Item>ID : {user.id}</ListGroup.Item>
+								<ListGroup.Item>
+									ID : {user.id || user._id}
+								</ListGroup.Item>
 								{Object.keys(user.external).map((key) =>
 									user.external[key].show &&
 									user.external[key].url ? (

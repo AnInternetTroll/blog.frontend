@@ -1,0 +1,6 @@
+.profilePic svg {
+	border-radius: 50%;
+}
+.profilePic {
+	float: left;
+}

@@ -1,5 +1,7 @@
 export interface User {
 	id: string;
+	// Sometimes nested items will return the ID as `_id`. it's an annoying bug
+	_id?: string;
 	username: string;
 	created_at: string;
 	bio: string;

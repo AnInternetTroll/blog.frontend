@@ -10,8 +10,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { useTracked } from "../components/state";
 import { sha256, deleteCookie, getCookie } from "../components/utils";
+import Jdenticon from "react-jdenticon";
 
-import "jdenticon/dist/jdenticon";
 interface EditFeedback {
 	editFeedback?: string;
 	err?: Error;
@@ -88,17 +88,10 @@ function EditProfile() {
 					<Form onSubmit={editUser}>
 						{globalState.user ? (
 							<Card>
-								{globalState.user.username ? (
-									<canvas
-										width="300px"
-										height="300px"
-										data-jdenticon-value={
-											globalState.user.username
-										}
-									/>
-								) : (
-									""
-								)}
+								<Jdenticon
+									size="300"
+									value={globalState.user.username}
+								/>
 								<Card.Body>
 									<Card.Title>
 										<InputGroup>
