@@ -1,4 +1,3 @@
-import Image from "next/image";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
@@ -251,7 +250,7 @@ function NavigationBar() {
 			<Navbar bg="primary" variant="dark" expand="md">
 				<Container fluid={false}>
 					<Navbar.Brand href="/">
-						<Image
+						<img
 							alt="Logo"
 							src="/favicon.ico"
 							width={30}
