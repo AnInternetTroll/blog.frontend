@@ -29,7 +29,7 @@ function User({
 				{/* The profile card */}
 				<Col lg={4}>
 					<Card>
-						<Jdenticon size="300" value={user.username} />
+						<Jdenticon size="300" value={user.id || user._id} />
 						<Card.Body>
 							<Card.Title>{user.username}</Card.Title>
 							<Card.Text>{user.bio}</Card.Text>
