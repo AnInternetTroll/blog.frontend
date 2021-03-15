@@ -3,7 +3,7 @@ import { Blog as BlogInterface } from "../../../models/api";
 import Card from "react-bootstrap/Card";
 import marked from "marked";
 import sanitize from "insane";
-import "jdenticon/dist/jdenticon";
+import { highlight, highlightAuto } from "highlight.js";
 
 function Blog({ user, blog, err }) {
 	if (err) return <p>Something went wrong</p>;
@@ -16,7 +16,14 @@ function Blog({ user, blog, err }) {
 				<Card.Header>{blog.name}</Card.Header>
 				<Card.Body
 					dangerouslySetInnerHTML={{
-						__html: sanitize(marked(blog.data)),
+						__html: sanitize(
+							marked(blog.data, {
+								highlight: (code, lang) =>
+									lang
+										? highlight(lang, code).value
+										: highlightAuto(code).value,
+							})
+						),
 					}}
 				/>
 			</Card>
