@@ -19,16 +19,18 @@ export default function NewBLog() {
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
-		const form = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+		const form = Object.fromEntries(
+			new FormData(e.target as HTMLFormElement)
+		);
 		const res = await fetch(`${process.env.base_url}/blogs`, {
 			method: "POST",
 			headers: {
-				Authorization: `Bearer ${getCookie("token")}`
-			}
+				Authorization: `Bearer ${getCookie("token")}`,
+			},
 		});
-		if (res.ok) setFeedback("Form succesfully saved")
+		if (res.ok) setFeedback("Form succesfully saved");
 		else setFeedback("An error has occured");
-	}
+	};
 
 	useEffect(() => {
 		if (globalState.user) {
@@ -46,15 +48,15 @@ export default function NewBLog() {
 			{globalState.user !== undefined ? (
 				<Form onSubmit={submit}>
 					<InputGroup>
-					<FormControl
-						name="title"
-						placeholder="Title here"
-						aria-label="Username"
+						<FormControl
+							name="title"
+							placeholder="Title here"
+							aria-label="Username"
 						/>
-					<FormControl
-						name="short_name"
-						placeholder="Short name here"
-						aria-label="Username"
+						<FormControl
+							name="short_name"
+							placeholder="Short name here"
+							aria-label="Username"
 						/>
 					</InputGroup>
 					<SimpleMDE

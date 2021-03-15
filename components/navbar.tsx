@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { VscAccount } from "react-icons/vsc";
+import { ImBooks, ImHome, ImUsers, ImUserPlus, ImUser } from "react-icons/im";
 import { User as UserInterface } from "../models/api";
 import {
 	Dispatch,
@@ -261,45 +261,76 @@ function NavigationBar() {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav className="mr-auto">
-							<Nav.Link href="/">Home</Nav.Link>
-							<Nav.Link href="/blogs">Blogs</Nav.Link>
-							<Nav.Link href="/users">Users</Nav.Link>
+						<Nav
+							className="mr-auto"
+							activeKey={
+								typeof location !== "undefined"
+									? location.pathname
+									: null
+							}
+						>
+							<Nav.Link href="/">
+								<ImHome color="white" />
+								Home
+							</Nav.Link>
+							<Nav.Link href="/blogs">
+								<ImBooks color="white" />
+								Blogs
+							</Nav.Link>
+							<Nav.Link href="/users">
+								<ImUsers color="white" />
+								Users
+							</Nav.Link>
 						</Nav>
-						<VscAccount color="white" />
-						{stateGlobal.user ? (
-							<Nav>
-								<NavDropdown
-									title={stateGlobal.user.username}
-									id="profile"
-								>
-									<NavDropdown.Item href="/editprofile">
-										Settings
-									</NavDropdown.Item>
-									<NavDropdown.Divider />
-									<NavDropdown.Item
-										onClick={() => {
-											deleteCookie("token");
-											setStateGlobal((s) => ({
-												...s,
-												user: null,
-											}));
-										}}
+						<Form inline>
+								<label className="switch">
+									<input
+										type="checkbox"
+										id="colorPreferance"
+									/>
+									<span
+										className="slider round"
+										id="slider"
+									/>
+								</label>
+						</Form>
+						<Nav>
+							{stateGlobal.user ? (
+								<>
+									<NavDropdown
+										title={stateGlobal.user.username}
+										id="profile"
 									>
-										Logout
-									</NavDropdown.Item>
-								</NavDropdown>
-							</Nav>
-						) : (
-							<Nav>
-								<Nav.Link onClick={handleShowLogin}>
-									Login
-								</Nav.Link>
-								<Nav.Link onClick={handleShowRegister}>
-									Register
-								</Nav.Link>
-							</Nav>
-						)}
+										<NavDropdown.Item href="/editprofile">
+											Settings
+										</NavDropdown.Item>
+										<NavDropdown.Divider />
+										<NavDropdown.Item
+											onClick={() => {
+												deleteCookie("token");
+												setStateGlobal((s) => ({
+													...s,
+													user: null,
+												}));
+											}}
+										>
+											Logout
+										</NavDropdown.Item>
+									</NavDropdown>
+								</>
+							) : (
+								<>
+									<Nav.Link onClick={handleShowLogin}>
+										<ImUser color="white" />
+										Login
+									</Nav.Link>
+									<Nav.Link onClick={handleShowRegister}>
+										<ImUserPlus color="white" />
+										Register
+									</Nav.Link>
+								</>
+							)}
+						</Nav>
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
