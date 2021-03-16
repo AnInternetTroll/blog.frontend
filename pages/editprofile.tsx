@@ -90,7 +90,7 @@ function EditProfile() {
 							<Card>
 								<Jdenticon
 									size="300"
-									value={globalState.user.username}
+									value={globalState.user.id}
 								/>
 								<Card.Body>
 									<Card.Title>

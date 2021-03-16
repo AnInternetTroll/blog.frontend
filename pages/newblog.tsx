@@ -26,7 +26,9 @@ export default function NewBLog() {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${getCookie("token")}`,
+				"Content-Type": "application/json",
 			},
+			body: JSON.stringify(form),
 		});
 		if (res.ok) setFeedback("Form succesfully saved");
 		else setFeedback("An error has occured");
@@ -55,6 +57,7 @@ export default function NewBLog() {
 						/>
 						<FormControl
 							name="short_name"
+							required
 							placeholder="Short name here"
 							aria-label="Username"
 						/>

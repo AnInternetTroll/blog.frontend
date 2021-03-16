@@ -1,8 +1,5 @@
 import Head from "next/head";
-import {
-	User as UserInterface,
-	Blog as BlogInterface,
-} from "../../../models/api";
+import { User as UserInterface, Blog as BlogInterface } from "../../models/api";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";

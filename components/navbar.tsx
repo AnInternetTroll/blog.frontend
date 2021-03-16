@@ -266,7 +266,7 @@ function NavigationBar() {
 							activeKey={
 								typeof location !== "undefined"
 									? location.pathname
-									: null
+									: "/"
 							}
 						>
 							<Nav.Link href="/">
@@ -283,16 +283,10 @@ function NavigationBar() {
 							</Nav.Link>
 						</Nav>
 						<Form inline>
-								<label className="switch">
-									<input
-										type="checkbox"
-										id="colorPreferance"
-									/>
-									<span
-										className="slider round"
-										id="slider"
-									/>
-								</label>
+							<label className="switch">
+								<input type="checkbox" id="colorPreferance" />
+								<span className="slider round" id="slider" />
+							</label>
 						</Form>
 						<Nav>
 							{stateGlobal.user ? (

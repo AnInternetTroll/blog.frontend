@@ -9,10 +9,10 @@
 		"format": "prettier --use-tabs -w ."
 	},
 	"dependencies": {
+		"@vtex/insane": "^2.8.0",
 		"bootstrap": "^4.6.0",
 		"dark-mode-toggle": "^0.8.0",
 		"highlight.js": "^10.6.0",
-		"insane": "^2.6.2",
 		"marked": "^2.0.0",
 		"next": "10.0.6",
 		"react": "^17.0.1",
