@@ -5,7 +5,15 @@ import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { ImBooks, ImHome, ImUsers, ImUserPlus, ImUser } from "react-icons/im";
+import {
+	ImBooks,
+	ImHome,
+	ImUsers,
+	ImUserPlus,
+	ImUser,
+	ImCog,
+	ImExit,
+} from "react-icons/im";
 import { User as UserInterface } from "../models/api";
 import {
 	Dispatch,
@@ -24,7 +32,7 @@ interface LoginInterface {
 
 function NavigationBar() {
 	const [stateGlobal, setStateGlobal] = useTracked();
-	let searchParams;
+	let searchParams: URLSearchParams;
 	if (typeof window !== "undefined")
 		searchParams = new URLSearchParams(window.location.search);
 	else searchParams = new URLSearchParams("");
@@ -290,28 +298,34 @@ function NavigationBar() {
 						</Form>
 						<Nav>
 							{stateGlobal.user ? (
-								<>
-									<NavDropdown
-										title={stateGlobal.user.username}
-										id="profile"
+								<NavDropdown
+									title={stateGlobal.user.username}
+									id="profile"
+								>
+									<NavDropdown.Item
+										href={`/${stateGlobal.user.username}`}
 									>
-										<NavDropdown.Item href="/editprofile">
-											Settings
-										</NavDropdown.Item>
-										<NavDropdown.Divider />
-										<NavDropdown.Item
-											onClick={() => {
-												deleteCookie("token");
-												setStateGlobal((s) => ({
-													...s,
-													user: null,
-												}));
-											}}
-										>
-											Logout
-										</NavDropdown.Item>
-									</NavDropdown>
-								</>
+										<ImUser /> Profile
+									</NavDropdown.Item>
+									<NavDropdown.Item
+										href={`/${stateGlobal.user.username}?edit=true`}
+									>
+										<ImCog /> Settings
+									</NavDropdown.Item>
+									<NavDropdown.Divider />
+									<NavDropdown.Item
+										onClick={() => {
+											deleteCookie("token");
+											setStateGlobal((s) => ({
+												...s,
+												user: null,
+											}));
+										}}
+									>
+										<ImExit />
+										Logout
+									</NavDropdown.Item>
+								</NavDropdown>
 							) : (
 								<>
 									<Nav.Link onClick={handleShowLogin}>

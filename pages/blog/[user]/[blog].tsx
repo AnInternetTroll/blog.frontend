@@ -19,7 +19,8 @@ function Blog({ user, blog, err }) {
 					dangerouslySetInnerHTML={{
 						__html: sanitize(
 							marked(blog.data, {
-								highlight: (code, lang) => highlightAuto(code).value,
+								highlight: (code, lang) =>
+									highlightAuto(code).value,
 							})
 						),
 					}}
