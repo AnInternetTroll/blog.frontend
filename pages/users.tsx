@@ -1,27 +1,33 @@
-import Head from "next/head";
-import { User as UserInterface } from "../models/api";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import CardColumns from "react-bootstrap/CardColumns";
-import { Component } from "react";
-import Jdenticon from "react-jdenticon";
-import styles from "../styles/Users.module.css";
-import { formatMarkdown } from "../components/utils";
+import "highlight.js/styles/stackoverflow-light.css";
 
+import { GetStaticProps } from "next";
+import Head from "next/head";
+import { Component } from "react";
+import Card from "react-bootstrap/Card";
+import CardColumns from "react-bootstrap/CardColumns";
+import Row from "react-bootstrap/Row";
+
+import { formatMarkdown } from "../components/utils";
+import { User as UserInterface } from "../models/api";
+import styles from "../styles/Users.module.css";
+
+interface UsersInterface {
+	users: UserInterface[];
+	err: unknown;
+}
 class User extends Component<
+	UsersInterface,
 	{
 		users: UserInterface[];
-		err: any;
-	},
-	any
+	}
 > {
-	constructor(props) {
+	constructor(props: UsersInterface) {
 		super(props);
 		this.state = {
 			users: props.users,
 		};
 	}
-	render() {
+	render(): JSX.Element {
 		return (
 			<>
 				<Head>
@@ -43,9 +49,10 @@ class User extends Component<
 														styles.profilePic
 													}
 												>
-													<Jdenticon
-														size="30"
-														value={user.id}
+													<img 
+														src={user.avatar}
+														height={25}
+														width={25}
 													/>
 												</span>
 												<a href={`/${user.username}`}>
@@ -70,7 +77,7 @@ class User extends Component<
 	}
 }
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
 	const userRes = await fetch(`${process.env.base_url}/users?direction=desc`);
 	if (userRes.ok)
 		return {
@@ -81,6 +88,6 @@ export async function getStaticProps() {
 			revalidate: 30,
 		};
 	else return { props: { users: null, err: userRes.status } };
-}
+};
 
 export default User;

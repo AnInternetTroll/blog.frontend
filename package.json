@@ -6,12 +6,12 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"format": "prettier --use-tabs -w ."
+		"format": "prettier --use-tabs -w .",
+		"lint": "eslint . --fix"
 	},
 	"dependencies": {
 		"@vtex/insane": "^2.8.0",
 		"bootstrap": "^4.6.0",
-		"dark-mode-toggle": "^0.8.0",
 		"highlight.js": "^10.6.0",
 		"marked": "^2.0.0",
 		"next": "10.0.6",
@@ -27,6 +27,11 @@
 	"devDependencies": {
 		"@types/marked": "^1.2.2",
 		"@types/node": "^14.14.27",
+		"@typescript-eslint/eslint-plugin": "^4.18.0",
+		"@typescript-eslint/parser": "^4.18.0",
+		"eslint": "^7.22.0",
+		"eslint-plugin-react": "^7.22.0",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
 		"prettier": "^2.2.1",
 		"typescript": "^4.1.5"
 	}

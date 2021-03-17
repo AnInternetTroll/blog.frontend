@@ -1,51 +1,50 @@
+import "highlight.js/styles/stackoverflow-light.css";
+import "easymde/dist/easymde.min.css";
+
+import hljs from "highlight.js";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { User as UserInterface, Blog as BlogInterface } from "../../models/api";
-import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Form from "react-bootstrap/Form";
-import Jdenticon from "react-jdenticon";
-import SimpleMDE from "react-simplemde-editor";
-import * as SimpleIcons from "react-icons/si";
 import {
-	useState,
-	useEffect,
 	Dispatch,
 	FormEvent,
 	SetStateAction,
+	useEffect,
+	useState,
 } from "react";
-import hljs from "highlight.js";
-import "highlight.js/styles/stackoverflow-light.css";
-import "easymde/dist/easymde.min.css";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
+import ListGroup from "react-bootstrap/ListGroup";
+import Row from "react-bootstrap/Row";
+import * as SimpleIcons from "react-icons/si";
+import SimpleMDE from "react-simplemde-editor";
+
+import { useTracked } from "../../components/state";
 import {
-	getCookie,
-	sha256,
 	deleteCookie,
 	formatMarkdown,
+	getCookie,
+	sha256,
 } from "../../components/utils";
-import { useTracked } from "../../components/state";
+import { Blog as BlogInterface, User as UserInterface } from "../../models/api";
 
 interface EditFeedback {
 	editFeedback?: string;
 	err?: Error;
 }
-
-function User({
-	user,
-	blogs,
-	err,
-}: {
+interface Props {
 	user: UserInterface;
 	blogs: BlogInterface[];
 	err: any;
-}) {
+}
+
+const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 	if (err) return <p>Something went wrong {err}</p>;
 
-	const [globalState, setGlobalState] = useTracked();
+	const [globalState] = useTracked();
 	let searchParams: URLSearchParams;
 	if (typeof window !== "undefined")
 		searchParams = new URLSearchParams(window.location.search);
@@ -88,6 +87,7 @@ function User({
 		});
 	};
 	const deleteUser = async () => {
+		const keep = confirm("Would you like your blogs to be transfered to @archive?");
 		const password = prompt("Are you sure? Type in your password");
 		const res = await fetch(`${process.env.base_url}/user`, {
 			method: "DELETE",
@@ -97,6 +97,7 @@ function User({
 			},
 			body: JSON.stringify({
 				hash: await sha256(password),
+				keep,
 			}),
 		});
 		if (res.ok) {
@@ -118,8 +119,6 @@ function User({
 				globalState.user?.id === (user.id || user._id)) ||
 				false
 		);
-		if (isEdit) {
-		}
 	}, [globalState.user]);
 	return (
 		<>
@@ -131,7 +130,11 @@ function User({
 				<Col lg={4}>
 					<Card>
 						<Form onSubmit={editUser}>
-							<Jdenticon size="300" value={user.id || user._id} />
+							<img
+								src={user.avatar}
+								width={300}
+								height={300}
+							/>
 							<Card.Body>
 								<Card.Title>
 									{isEdit ? (
@@ -284,7 +287,7 @@ function User({
 						<Card.Body>
 							<Row>
 								{blogs.length !== 0
-									? blogs.map((blog, index) => (
+									? blogs.map((blog) => (
 											<Col key={blog.short_name}>
 												<Card>
 													<Card.Header>
@@ -316,9 +319,9 @@ function User({
 			</Row>
 		</>
 	);
-}
+};
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths<any> = async () => {
 	const usersRes = await fetch(`${process.env.base_url}/users`);
 	const users = (await usersRes.json()) as UserInterface[];
 	const paths: { params: { user: string; err: null | Error } }[] = [];
@@ -326,9 +329,9 @@ export async function getStaticPaths() {
 		paths[i] = { params: { user: users[i].username, err: null } };
 	}
 	return { paths, fallback: "blocking" };
-}
+};
 
-export async function getStaticProps({ params }) {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
 	const { user } = params;
 	const blogsRes = await fetch(
 		`${process.env.base_url}/blogs/${user}?embed=author`
@@ -348,6 +351,6 @@ export async function getStaticProps({ params }) {
 			revalidate: 30,
 		};
 	else return { props: { user: null, err: blogsRes.statusText } };
-}
+};
 
 export default User;

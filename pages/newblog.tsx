@@ -1,18 +1,20 @@
-import Head from "next/head";
-import { useTracked } from "../components/state";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import { FormEvent, useEffect, useState } from "react";
-import SimpleMDE from "react-simplemde-editor";
-import hljs from "highlight.js";
 import "highlight.js/styles/stackoverflow-light.css";
 import "easymde/dist/easymde.min.css";
+
+import hljs from "highlight.js";
+import Head from "next/head";
+import { FormEvent, useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
+import SimpleMDE from "react-simplemde-editor";
+
+import { useTracked } from "../components/state";
 import { getCookie } from "../components/utils";
 
-export default function NewBLog() {
-	const [globalState, setGLobalState] = useTracked();
+export default function NewBLog(): JSX.Element {
+	const [globalState] = useTracked();
 	const [feedback, setFeedback] = useState("");
 	let descriptionEl: HTMLTextAreaElement;
 	let dataEl: HTMLTextAreaElement;
@@ -54,13 +56,13 @@ export default function NewBLog() {
 					<InputGroup>
 						<FormControl
 							name="name"
-							placeholder="Title here"
+							placeholder="Title Here"
 							aria-label="Username"
 						/>
 						<FormControl
 							name="short_name"
 							required
-							placeholder="Short name here"
+							placeholder="URL"
 							aria-label="Username"
 						/>
 					</InputGroup>
@@ -85,7 +87,7 @@ export default function NewBLog() {
 						}}
 					/>
 					<SimpleMDE
-						label="Blog text"
+						label="Blog Text"
 						id="data"
 						onChange={(value) => {
 							dataEl.value = value;

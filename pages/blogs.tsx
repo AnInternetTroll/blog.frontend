@@ -1,22 +1,27 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
-import { Blog as BlogInterface } from "../models/api";
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
+import CardColumns from "react-bootstrap/CardColumns";
 import Col from "react-bootstrap/Col";
+
+import { useTracked } from "../components/state";
 import { formatMarkdown } from "../components/utils";
+import { Blog as BlogInterface } from "../models/api";
+import styles from "../styles/Users.module.css";
+
 export default function Users({
 	blogs,
-	err,
 }: {
 	blogs: BlogInterface[];
-	err: any;
-}) {
+}): JSX.Element {
+	const [globalState, setGlobalState] = useTracked();
 	return (
 		<>
 			<Head>
 				<title>Blogs - Assbook</title>
 			</Head>
-			<Row>
+			<CardColumns>
 				{blogs.length !== 0
 					? blogs.map((blog) => (
 							<Col key={blog.id}>
@@ -35,18 +40,33 @@ export default function Users({
 											),
 										}}
 									/>
-									<Card.Footer>{blog.id}</Card.Footer>
+									<Card.Footer>
+										<span className={styles.profilePic}>
+											<img 
+												src={blog.author.avatar}
+												height={25}
+												width={25}
+											/>
+										</span>
+										<a href={blog.author.username}>
+											{blog.author.username}
+										</a>
+										{"	"}
+										{globalState.user?.id === (blog.author.id || blog.author._id) ? (
+											<Button>Delete</Button>
+										) : ""}
+									</Card.Footer>
 								</Card>
 								<br />
 							</Col>
 					  ))
 					: "No blogs found"}
-			</Row>
+			</CardColumns>
 		</>
 	);
 }
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
 	const blogsRes = await fetch(
 		`${process.env.base_url}/blogs?embed=author&direction=desc`
 	);
@@ -59,4 +79,4 @@ export async function getStaticProps() {
 			revalidate: 30,
 		};
 	else return { props: { users: null, err: blogsRes.status } };
-}
+};

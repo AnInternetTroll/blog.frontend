@@ -1,6 +1,6 @@
+import sanitize from "@vtex/insane";
 import { getLanguage, highlight, highlightAuto } from "highlight.js";
 import marked from "marked";
-import sanitize from "@vtex/insane";
 
 /**
  * Hash any string with sha-256
@@ -25,7 +25,7 @@ export async function sha256(message: string): Promise<string> {
  * @param name What cookie to get
  * @returns The value of the cookie
  */
-export function getCookie(name: string = null) {
+export function getCookie(name: string = null): string {
 	const v = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
 	return v ? v[2] : null;
 }
@@ -35,7 +35,7 @@ export function getCookie(name: string = null) {
  * @param value The value of it
  * @param seconds In seconds when to expire. Defaults to 3600 seconds (1 hour)
  */
-export function setCookie(name: string, value: string, seconds = 3600) {
+export function setCookie(name: string, value: string, seconds = 3600): void {
 	const d = new Date();
 	d.setTime(Date.now() + seconds * 100);
 	document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
@@ -44,7 +44,7 @@ export function setCookie(name: string, value: string, seconds = 3600) {
  * Replace a cookie with an empty string
  * @param name What cookie to delete
  */
-export function deleteCookie(name: string) {
+export function deleteCookie(name: string): void {
 	setCookie(name, "", -1);
 }
 /**

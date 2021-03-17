@@ -1,21 +1,3 @@
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Container from "react-bootstrap/Container";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import {
-	ImBooks,
-	ImHome,
-	ImUsers,
-	ImUserPlus,
-	ImUser,
-	ImCog,
-	ImExit,
-	ImPencil,
-} from "react-icons/im";
-import { User as UserInterface } from "../models/api";
 import {
 	Dispatch,
 	FormEvent,
@@ -23,15 +5,34 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { State, useTracked } from "./state";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import {
+	ImBooks,
+	ImCog,
+	ImExit,
+	ImHome,
+	ImPencil,
+	ImUser,
+	ImUserPlus,
+	ImUsers,
+} from "react-icons/im";
+
 import { deleteCookie, sha256 } from "../components/utils";
+import { User as UserInterface } from "../models/api";
+import { State, useTracked } from "./state";
 
 interface LoginInterface {
 	loginFeedback?: string;
 	registerFeedback?: string;
 }
 
-function NavigationBar() {
+function NavigationBar(): JSX.Element {
 	const [stateGlobal, setStateGlobal] = useTracked();
 	let searchParams: URLSearchParams;
 	if (typeof window !== "undefined")
@@ -56,7 +57,7 @@ function NavigationBar() {
 		loginFeedback: "",
 		registerFeedback: "",
 	});
-	const [globalState, setGlobalState]: [
+	const [, setGlobalState]: [
 		State,
 		Dispatch<SetStateAction<State>>
 	] = useTracked();

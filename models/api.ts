@@ -3,6 +3,7 @@ export interface User {
 	// Sometimes nested items will return the ID as `_id`. it's an annoying bug
 	_id?: string;
 	username: string;
+	avatar: string;
 	created_at: string;
 	bio: string;
 	external: {

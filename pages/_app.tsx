@@ -1,12 +1,15 @@
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import type { AppProps } from "next/app";
 import Head from "next/head";
-import Container from "react-bootstrap/Container";
 import { useEffect } from "react";
+import Container from "react-bootstrap/Container";
+
 import Navbar from "../components/navbar";
 import { Provider } from "../components/state";
 
-function Assbook({ Component, pageProps }) {
+function Assbook({ Component, pageProps }: AppProps): JSX.Element {
 	useEffect(() => {
 		if ("serviceWorker" in navigator) {
 			window.addEventListener("load", () =>
