@@ -6,6 +6,7 @@ import CardColumns from "react-bootstrap/CardColumns";
 import { Component } from "react";
 import Jdenticon from "react-jdenticon";
 import styles from "../styles/Users.module.css";
+import { formatMarkdown } from "../components/utils";
 
 class User extends Component<
 	{
@@ -29,7 +30,7 @@ class User extends Component<
 				<Row>
 					<CardColumns className="">
 						{this.state.users.length !== 0
-							? this.state.users.map((user, index) => (
+							? this.state.users.map((user) => (
 									<Card key={user.username}>
 										<Card.Header>
 											<h4
@@ -52,7 +53,13 @@ class User extends Component<
 												</a>
 											</h4>
 										</Card.Header>
-										<Card.Body>{user.bio}</Card.Body>
+										<Card.Body
+											dangerouslySetInnerHTML={{
+												__html: formatMarkdown(
+													user.bio
+												),
+											}}
+										/>
 									</Card>
 							  ))
 							: "No users found"}
@@ -64,7 +71,7 @@ class User extends Component<
 }
 
 export async function getStaticProps() {
-	const userRes = await fetch(`${process.env.base_url}/users`);
+	const userRes = await fetch(`${process.env.base_url}/users?direction=desc`);
 	if (userRes.ok)
 		return {
 			props: {

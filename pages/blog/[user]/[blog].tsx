@@ -1,9 +1,8 @@
 import Head from "next/head";
 import { Blog as BlogInterface } from "../../../models/api";
 import Card from "react-bootstrap/Card";
-import marked from "marked";
-import sanitize from "@vtex/insane";
-import { highlight, highlightAuto } from "highlight.js";
+import { formatMarkdown } from "../../../components/utils";
+
 import "highlight.js/styles/stackoverflow-light.css";
 
 function Blog({ user, blog, err }) {
@@ -17,12 +16,7 @@ function Blog({ user, blog, err }) {
 				<Card.Header>{blog.name}</Card.Header>
 				<Card.Body
 					dangerouslySetInnerHTML={{
-						__html: sanitize(
-							marked(blog.data, {
-								highlight: (code, lang) =>
-									highlightAuto(code).value,
-							})
-						),
+						__html: formatMarkdown(blog.data),
 					}}
 				/>
 			</Card>

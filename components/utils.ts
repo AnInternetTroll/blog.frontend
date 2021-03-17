@@ -1,3 +1,7 @@
+import { getLanguage, highlight, highlightAuto } from "highlight.js";
+import marked from "marked";
+import sanitize from "@vtex/insane";
+
 /**
  * Hash any string with sha-256
  * @param message The string to be sha-256 hashed
@@ -42,4 +46,25 @@ export function setCookie(name: string, value: string, seconds = 3600) {
  */
 export function deleteCookie(name: string) {
 	setCookie(name, "", -1);
+}
+/**
+ * Convert markdown text to html.
+ * @param text Markdown text
+ * @returns HTML formatted text. **Requires highlight.js css**
+ */
+export function formatMarkdown(text: string): string {
+	return sanitize(
+		marked(text, {
+			highlight: (code, lang) =>
+				getLanguage(lang)
+					? highlight(lang, code).value
+					: highlightAuto(code).value,
+		}),
+		{
+			allowedAttributes: {
+				span: ["class"],
+				code: ["class"],
+			},
+		}
+	);
 }

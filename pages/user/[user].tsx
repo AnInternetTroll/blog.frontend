@@ -11,7 +11,6 @@ import Form from "react-bootstrap/Form";
 import Jdenticon from "react-jdenticon";
 import SimpleMDE from "react-simplemde-editor";
 import * as SimpleIcons from "react-icons/si";
-import hljs from "highlight.js";
 import {
 	useState,
 	useEffect,
@@ -19,12 +18,15 @@ import {
 	FormEvent,
 	SetStateAction,
 } from "react";
-import marked from "marked";
-import sanitize from "@vtex/insane";
-import { highlight, highlightAuto } from "highlight.js";
+import hljs from "highlight.js";
 import "highlight.js/styles/stackoverflow-light.css";
 import "easymde/dist/easymde.min.css";
-import { getCookie, sha256, deleteCookie } from "../../components/utils";
+import {
+	getCookie,
+	sha256,
+	deleteCookie,
+	formatMarkdown,
+} from "../../components/utils";
 import { useTracked } from "../../components/state";
 
 interface EditFeedback {
@@ -175,15 +177,8 @@ function User({
 									) : (
 										<p
 											dangerouslySetInnerHTML={{
-												__html: sanitize(
-													marked(user.bio, {
-														highlight: (
-															code,
-															lang
-														) =>
-															highlightAuto(code)
-																.value,
-													})
+												__html: formatMarkdown(
+													user.bio
 												),
 											}}
 										/>
@@ -299,9 +294,13 @@ function User({
 															{blog.name}
 														</a>
 													</Card.Header>
-													<Card.Body>
-														{blog.description}
-													</Card.Body>
+													<Card.Body
+														dangerouslySetInnerHTML={{
+															__html: formatMarkdown(
+																blog.description
+															),
+														}}
+													/>
 													<Card.Footer>
 														{blog.id}
 													</Card.Footer>

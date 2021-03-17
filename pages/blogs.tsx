@@ -3,6 +3,7 @@ import { Blog as BlogInterface } from "../models/api";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { formatMarkdown } from "../components/utils";
 export default function Users({
 	blogs,
 	err,
@@ -17,7 +18,7 @@ export default function Users({
 			</Head>
 			<Row>
 				{blogs.length !== 0
-					? blogs.map((blog, index) => (
+					? blogs.map((blog) => (
 							<Col key={blog.id}>
 								<Card>
 									<Card.Header>
@@ -27,7 +28,13 @@ export default function Users({
 											{blog.name}
 										</a>
 									</Card.Header>
-									<Card.Body>{blog.description}</Card.Body>
+									<Card.Body
+										dangerouslySetInnerHTML={{
+											__html: formatMarkdown(
+												blog.description
+											),
+										}}
+									/>
 									<Card.Footer>{blog.id}</Card.Footer>
 								</Card>
 								<br />
@@ -40,7 +47,9 @@ export default function Users({
 }
 
 export async function getStaticProps() {
-	const blogsRes = await fetch(`${process.env.base_url}/blogs?embed=author`);
+	const blogsRes = await fetch(
+		`${process.env.base_url}/blogs?embed=author&direction=desc`
+	);
 	if (blogsRes.ok)
 		return {
 			props: {

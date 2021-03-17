@@ -13,6 +13,7 @@ import {
 	ImUser,
 	ImCog,
 	ImExit,
+	ImPencil,
 } from "react-icons/im";
 import { User as UserInterface } from "../models/api";
 import {
@@ -89,9 +90,12 @@ function NavigationBar() {
 				},
 			});
 			const login = await loginRes.json();
-			if (loginRes.ok) setCookie("token", login.token, login.expiresIn);
+			if (loginRes.ok) {
+				setCookie("token", login.token, login.expiresIn);
+				saveUser(login.token);
+				handleCloseLogin();
+			}
 			setState({ loginFeedback: login.message });
-			saveUser(login.token);
 		});
 	};
 
@@ -116,10 +120,12 @@ function NavigationBar() {
 				}
 			);
 			const register = await registerRes.json();
-			if (registerRes.ok)
+			if (registerRes.ok) {
 				setCookie("token", register.token, register.expiresIn);
+				saveUser(register.token);
+				handleCloseRegister();
+			}
 			setState({ registerFeedback: register.message });
-			saveUser(register.token);
 		});
 	};
 	useEffect(() => {
@@ -306,6 +312,9 @@ function NavigationBar() {
 										href={`/${stateGlobal.user.username}`}
 									>
 										<ImUser /> Profile
+									</NavDropdown.Item>
+									<NavDropdown.Item href="/newblog">
+										<ImPencil /> New blog
 									</NavDropdown.Item>
 									<NavDropdown.Item
 										href={`/${stateGlobal.user.username}?edit=true`}

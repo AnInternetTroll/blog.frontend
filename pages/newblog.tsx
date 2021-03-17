@@ -30,8 +30,10 @@ export default function NewBLog() {
 			},
 			body: JSON.stringify(form),
 		});
-		if (res.ok) setFeedback("Form succesfully saved");
-		else setFeedback("An error has occured");
+		if (res.ok) {
+			setFeedback("Blog succesfully saved");
+			window.location.href = `/${globalState.user.username}/${form.short_name}`;
+		} else setFeedback((await res.json()).message);
 	};
 
 	useEffect(() => {
@@ -51,7 +53,7 @@ export default function NewBLog() {
 				<Form onSubmit={submit}>
 					<InputGroup>
 						<FormControl
-							name="title"
+							name="name"
 							placeholder="Title here"
 							aria-label="Username"
 						/>
@@ -100,6 +102,9 @@ export default function NewBLog() {
 							},
 						}}
 					/>
+					{feedback}
+					<br />
+					<br />
 					<Button type="submit">Submit</Button>
 				</Form>
 			) : (
