@@ -93,3 +93,37 @@ body.dark_theme {
 	background-color: #323233;
 	color: #d7d7d7;
 }
+
+.dark_theme div.list-group-item {
+	background-color: #343a40 !important;
+}
+
+.dark_theme .modal-content {
+	color: #d7d7d7;
+	background-color: #323232;
+}
+.dark_theme .modal-content .close {
+	color: #fff;
+}
+
+/* Markdown editor dark mode */
+.dark_theme .CodeMirror {
+	color: #000 !important;
+	border-color: rgb(172, 172, 172) !important;
+	background-color: "inherit" !important;
+}
+.dark_theme .cm-s-easymde .CodeMirror-cursor {
+	border-color: rgb(172, 172, 172) !important;
+}
+.dark_theme .editor-toolbar > * {
+	color: #fff !important;
+}
+.dark_theme .editor-toolbar > .active,
+.editor-toolbar > button:hover,
+.editor-preview pre,
+.cm-s-easymde .cm-comment {
+	background-color: rgb(172, 172, 172) !important;
+}
+.dark_theme .editor-preview {
+	background-color: rgb(53, 53, 53) !important;
+}

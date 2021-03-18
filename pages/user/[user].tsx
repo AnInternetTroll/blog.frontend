@@ -132,10 +132,42 @@ const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 			<Row>
 				{/* The profile card */}
 				<Col lg={4}>
-					<Card>
+					<Card
+						bg={
+							globalState.theme === "dark_theme"
+								? "dark"
+								: "light"
+						}
+						text={
+							globalState.theme === "dark_theme"
+								? "light"
+								: "dark"
+						}
+					>
 						<Form onSubmit={editUser}>
-							<img src={user.avatar} width={300} height={300} />
+							<img
+								src={user.avatar}
+								width={"100%"}
+								height={"100%"}
+							/>
 							<Card.Body>
+								{isEdit ? (
+									<FormControl
+										type="text"
+										name="avatar"
+										placeholder="URL to an image"
+										defaultValue={user.avatar}
+										onChange={(e) =>
+											(user = Object.assign(user, {
+												avatar: e.target.value,
+											}))
+										}
+										style={{ width: "100%" }}
+									/>
+								) : (
+									""
+								)}
+								<hr />
 								<Card.Title>
 									{isEdit ? (
 										<InputGroup>
@@ -283,20 +315,26 @@ const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 				</Col>
 				{/* The body card */}
 				<Col lg={8}>
-					<Card>
+					<Card
+						bg={
+							globalState.theme === "dark_theme"
+								? "dark"
+								: "light"
+						}
+						text={
+							globalState.theme === "dark_theme"
+								? "light"
+								: "dark"
+						}
+					>
 						<Card.Body>
-							<Row>
-								<CardColumns>
-									{blogs.length !== 0
-										? blogs.map((blog) => (
-												<Blog
-													blog={blog}
-													key={blog.id}
-												/>
-										  ))
-										: "No blogs found"}
-								</CardColumns>
-							</Row>
+							<CardColumns>
+								{blogs.length !== 0
+									? blogs.map((blog) => (
+											<Blog blog={blog} key={blog.id} />
+									  ))
+									: "No blogs found"}
+							</CardColumns>
 						</Card.Body>
 					</Card>
 				</Col>

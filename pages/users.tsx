@@ -3,14 +3,11 @@ import "highlight.js/styles/stackoverflow-light.css";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import { Component } from "react";
-import Card from "react-bootstrap/Card";
 import CardColumns from "react-bootstrap/CardColumns";
 import Row from "react-bootstrap/Row";
 
 import { User } from "../components/cards";
-import { formatMarkdown } from "../components/utils";
 import { User as UserInterface } from "../models/api";
-import styles from "../styles/Users.module.css";
 
 interface UsersInterface {
 	users: UserInterface[];

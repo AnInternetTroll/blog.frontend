@@ -14,7 +14,6 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {
-	ImBooks,
 	ImCog,
 	ImExit,
 	ImHome,
@@ -24,7 +23,7 @@ import {
 	ImUsers,
 } from "react-icons/im";
 
-import { deleteCookie, sha256 } from "../components/utils";
+import { deleteCookie, setCookie, sha256 } from "../components/utils";
 import { User as UserInterface } from "../models/api";
 import { State, useTracked } from "./state";
 
@@ -72,12 +71,6 @@ function NavigationBar(): JSX.Element {
 		const user = await res.json();
 		if (res.ok) setGlobalState((s) => ({ ...s, user }));
 		else setGlobalState((s) => ({ ...s, user: null }));
-	};
-
-	const setCookie = (name: string, value: string, seconds = 3600) => {
-		const d = new Date();
-		d.setTime(Date.now() + seconds * 100);
-		document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
 	};
 
 	const login = (e: FormEvent) => {
@@ -308,10 +301,6 @@ function NavigationBar(): JSX.Element {
 							<Nav.Link href="/">
 								<ImHome color="white" />
 								Home
-							</Nav.Link>
-							<Nav.Link href="/blogs">
-								<ImBooks color="white" />
-								Blogs
 							</Nav.Link>
 							<Nav.Link href="/users">
 								<ImUsers color="white" />

@@ -55,7 +55,6 @@ export const Blog = ({
 			{...props}
 			bg={globalState.theme === "dark_theme" ? "dark" : "light"}
 			text={globalState.theme === "dark_theme" ? "light" : "dark"}
-			className=""
 		>
 			<Card.Header className="d-flex justify-content-between align-items-center">
 				<a href={`/${blog.author.username}/${blog.short_name}`}>
@@ -63,9 +62,7 @@ export const Blog = ({
 				</a>
 				{globalState.user?.id ===
 				(blog.author.id || blog.author._id) ? (
-					<Button variant="danger">
-						Delete
-					</Button>
+					<Button variant="danger">Delete</Button>
 				) : (
 					""
 				)}
