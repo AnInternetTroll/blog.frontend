@@ -187,7 +187,7 @@ function NavigationBar(): JSX.Element {
 							placeholder="Enter Username"
 							autoComplete="username"
 							required
-							pattern="^(?!-)[a-z0-9-]+(?<!-)(/(?!-)[a-z0-9-]+(?<!-))*(/(?!-\.)[a-z0-9-\.]+(?<!-\.))?$"
+							pattern="^(?!-)[A-z0-9-]+(?<!-)((?!-)[A-z0-9-]+(?<!-))*((?!-\.)[A-z0-9-\.]+(?<!-\.))?$"
 						/>
 						<Form.Label>
 							<Modal.Title>Password</Modal.Title>
@@ -235,7 +235,7 @@ function NavigationBar(): JSX.Element {
 							placeholder="Enter Username"
 							autoComplete="username"
 							required
-							pattern="^(?!-)[a-z0-9-]+(?<!-)(/(?!-)[a-z0-9-]+(?<!-))*(/(?!-\.)[a-z0-9-\.]+(?<!-\.))?$"
+							pattern="^(?!-)[A-z0-9-]+(?<!-)((?!-)[A-z0-9-]+(?<!-))*((?!-\.)[A-z0-9-\.]+(?<!-\.))?$"
 						/>
 						<Form.Label>
 							<Modal.Title>Password</Modal.Title>
