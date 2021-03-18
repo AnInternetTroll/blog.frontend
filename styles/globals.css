@@ -87,3 +87,9 @@ html.transition *:after {
 	transition-delay: 0;
 }
 /* Button end */
+
+/* Dark mode */
+body.dark_theme {
+	background-color: #323233;
+	color: #d7d7d7;
+}

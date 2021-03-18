@@ -4,11 +4,13 @@ import { createContainer } from "react-tracked";
 import { User } from "../models/api";
 
 export interface State {
-	user: User;
+	user?: User;
+	theme?: "dark_theme" | "light_theme";
 }
 
 const initialState: State = {
 	user: null,
+	theme: "dark_theme",
 };
 
 const useValue = () => useState(initialState);

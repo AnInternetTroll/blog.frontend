@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import CardColumns from "react-bootstrap/CardColumns";
 import Row from "react-bootstrap/Row";
 
+import { User } from "../components/cards";
 import { formatMarkdown } from "../components/utils";
 import { User as UserInterface } from "../models/api";
 import styles from "../styles/Users.module.css";
@@ -15,7 +16,7 @@ interface UsersInterface {
 	users: UserInterface[];
 	err: unknown;
 }
-class User extends Component<
+class Users extends Component<
 	UsersInterface,
 	{
 		users: UserInterface[];
@@ -37,37 +38,7 @@ class User extends Component<
 					<CardColumns className="">
 						{this.state.users.length !== 0
 							? this.state.users.map((user) => (
-									<Card key={user.username}>
-										<Card.Header>
-											<h4
-												style={{
-													display: "inline-block",
-												}}
-											>
-												<span
-													className={
-														styles.profilePic
-													}
-												>
-													<img 
-														src={user.avatar}
-														height={25}
-														width={25}
-													/>
-												</span>
-												<a href={`/${user.username}`}>
-													{user.username}
-												</a>
-											</h4>
-										</Card.Header>
-										<Card.Body
-											dangerouslySetInnerHTML={{
-												__html: formatMarkdown(
-													user.bio
-												),
-											}}
-										/>
-									</Card>
+									<User user={user} key={user.username} />
 							  ))
 							: "No users found"}
 					</CardColumns>
@@ -90,4 +61,4 @@ export const getStaticProps: GetStaticProps = async () => {
 	else return { props: { users: null, err: userRes.status } };
 };
 
-export default User;
+export default Users;

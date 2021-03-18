@@ -1,21 +1,16 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
 import CardColumns from "react-bootstrap/CardColumns";
 import Col from "react-bootstrap/Col";
 
-import { useTracked } from "../components/state";
-import { formatMarkdown } from "../components/utils";
+import { Blog } from "../components/cards";
 import { Blog as BlogInterface } from "../models/api";
-import styles from "../styles/Users.module.css";
 
-export default function Users({
+export default function Blogs({
 	blogs,
 }: {
 	blogs: BlogInterface[];
 }): JSX.Element {
-	const [globalState, setGlobalState] = useTracked();
 	return (
 		<>
 			<Head>
@@ -25,38 +20,7 @@ export default function Users({
 				{blogs.length !== 0
 					? blogs.map((blog) => (
 							<Col key={blog.id}>
-								<Card>
-									<Card.Header>
-										<a
-											href={`/${blog.author.username}/${blog.short_name}`}
-										>
-											{blog.name}
-										</a>
-									</Card.Header>
-									<Card.Body
-										dangerouslySetInnerHTML={{
-											__html: formatMarkdown(
-												blog.description
-											),
-										}}
-									/>
-									<Card.Footer>
-										<span className={styles.profilePic}>
-											<img 
-												src={blog.author.avatar}
-												height={25}
-												width={25}
-											/>
-										</span>
-										<a href={blog.author.username}>
-											{blog.author.username}
-										</a>
-										{"	"}
-										{globalState.user?.id === (blog.author.id || blog.author._id) ? (
-											<Button>Delete</Button>
-										) : ""}
-									</Card.Footer>
-								</Card>
+								<Blog blog={blog} />
 								<br />
 							</Col>
 					  ))

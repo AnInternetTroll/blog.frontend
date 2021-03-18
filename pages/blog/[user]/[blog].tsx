@@ -3,34 +3,51 @@ import "highlight.js/styles/stackoverflow-light.css";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+
 import { useTracked } from "../../../components/state";
-
 import { formatMarkdown, getCookie } from "../../../components/utils";
-import { Blog as BlogInterface } from "../../../models/api";
+import {
+	Blog as BlogInterface,
+	User as UserInterface,
+} from "../../../models/api";
 
-function Blog({ user, blog, err }) {
+function Blog({
+	user,
+	blog,
+	err,
+}: {
+	user: UserInterface;
+	blog: BlogInterface;
+	err: unknown;
+}): JSX.Element {
 	if (err) return <p>Something went wrong</p>;
 	const [globalState] = useTracked();
 	const [feedback, setFeedback] = useState("");
 	const deleteBlog = async () => {
-		const res = await fetch(`${process.env.base_url}/blogs/${user.username}/${blog.short_name}`, {
-			method: "DELETE",
-			headers: {
-				Authorization: `Bearer ${getCookie("token")}`,
+		const res = await fetch(
+			`${process.env.base_url}/blogs/${user.username}/${blog.short_name}`,
+			{
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${getCookie("token")}`,
+				},
 			}
-		});
+		);
 		if (res.ok) window.location.href = "/";
 		else setFeedback((await res.json()).message);
-	}
+	};
 
 	return (
 		<>
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
-			<Card>
+			<Card
+				bg={globalState.theme === "dark_theme" ? "dark" : "light"}
+				text={globalState.theme === "dark_theme" ? "light" : "dark"}
+			>
 				<Card.Header>{blog.name}</Card.Header>
 				<Card.Body
 					dangerouslySetInnerHTML={{
@@ -43,7 +60,9 @@ function Blog({ user, blog, err }) {
 						<br />
 						<Button onClick={deleteBlog}>Delete</Button>
 					</>
-				) : ""}
+				) : (
+					""
+				)}
 			</Card>
 		</>
 	);

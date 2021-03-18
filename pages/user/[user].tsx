@@ -13,6 +13,7 @@ import {
 } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import CardColumns from "react-bootstrap/CardColumns";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
@@ -22,6 +23,7 @@ import Row from "react-bootstrap/Row";
 import * as SimpleIcons from "react-icons/si";
 import SimpleMDE from "react-simplemde-editor";
 
+import { Blog } from "../../components/cards";
 import { useTracked } from "../../components/state";
 import {
 	deleteCookie,
@@ -87,7 +89,9 @@ const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 		});
 	};
 	const deleteUser = async () => {
-		const keep = confirm("Would you like your blogs to be transfered to @archive?");
+		const keep = confirm(
+			"Would you like your blogs to be transfered to @archive?"
+		);
 		const password = prompt("Are you sure? Type in your password");
 		const res = await fetch(`${process.env.base_url}/user`, {
 			method: "DELETE",
@@ -130,11 +134,7 @@ const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 				<Col lg={4}>
 					<Card>
 						<Form onSubmit={editUser}>
-							<img
-								src={user.avatar}
-								width={300}
-								height={300}
-							/>
+							<img src={user.avatar} width={300} height={300} />
 							<Card.Body>
 								<Card.Title>
 									{isEdit ? (
@@ -286,32 +286,16 @@ const User: NextPage<Props, EditFeedback> = ({ user, blogs, err }: Props) => {
 					<Card>
 						<Card.Body>
 							<Row>
-								{blogs.length !== 0
-									? blogs.map((blog) => (
-											<Col key={blog.short_name}>
-												<Card>
-													<Card.Header>
-														<a
-															href={`/${user.username}/${blog.short_name}`}
-														>
-															{blog.name}
-														</a>
-													</Card.Header>
-													<Card.Body
-														dangerouslySetInnerHTML={{
-															__html: formatMarkdown(
-																blog.description
-															),
-														}}
-													/>
-													<Card.Footer>
-														{blog.id}
-													</Card.Footer>
-												</Card>
-												<br />
-											</Col>
-									  ))
-									: "No blogs found"}
+								<CardColumns>
+									{blogs.length !== 0
+										? blogs.map((blog) => (
+												<Blog
+													blog={blog}
+													key={blog.id}
+												/>
+										  ))
+										: "No blogs found"}
+								</CardColumns>
 							</Row>
 						</Card.Body>
 					</Card>

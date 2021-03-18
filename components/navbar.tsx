@@ -1,4 +1,5 @@
 import {
+	ChangeEventHandler,
 	Dispatch,
 	FormEvent,
 	SetStateAction,
@@ -57,7 +58,7 @@ function NavigationBar(): JSX.Element {
 		loginFeedback: "",
 		registerFeedback: "",
 	});
-	const [, setGlobalState]: [
+	const [globalState, setGlobalState]: [
 		State,
 		Dispatch<SetStateAction<State>>
 	] = useTracked();
@@ -129,6 +130,25 @@ function NavigationBar(): JSX.Element {
 			setState({ registerFeedback: register.message });
 		});
 	};
+	const themeChange: ChangeEventHandler<HTMLInputElement> = (e = null) => {
+		if (e) {
+			if (e.target.checked) {
+				setGlobalState((s) => ({ ...s, theme: "dark_theme" }));
+				document.body.classList.add("dark_theme");
+				document.body.classList.remove("light_theme");
+			} else {
+				setGlobalState((s) => ({ ...s, theme: "light_theme" }));
+				document.body.classList.add("light_theme");
+				document.body.classList.remove("dark_theme");
+			}
+		} else {
+			(document.getElementById(
+				"themeChange"
+			) as HTMLInputElement).checked = globalState.theme === "dark_theme";
+			document.body.classList.add(globalState.theme);
+		}
+	};
+
 	useEffect(() => {
 		if (!stateGlobal.user && typeof document !== "undefined") {
 			if (document.cookie) {
@@ -152,7 +172,8 @@ function NavigationBar(): JSX.Element {
 				}
 			}
 		}
-	});
+		themeChange(undefined);
+	}, [stateGlobal.user]);
 	return (
 		<>
 			<Modal show={showLogin} onHide={handleCloseLogin}>
@@ -299,7 +320,11 @@ function NavigationBar(): JSX.Element {
 						</Nav>
 						<Form inline>
 							<label className="switch">
-								<input type="checkbox" id="colorPreferance" />
+								<input
+									type="checkbox"
+									id="themeChange"
+									onChange={themeChange}
+								/>
 								<span className="slider round" id="slider" />
 							</label>
 						</Form>
