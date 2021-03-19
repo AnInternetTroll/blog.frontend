@@ -33,7 +33,6 @@ interface LoginInterface {
 }
 
 function NavigationBar(): JSX.Element {
-	const [stateGlobal, setStateGlobal] = useTracked();
 	let searchParams: URLSearchParams;
 	if (typeof window !== "undefined")
 		searchParams = new URLSearchParams(window.location.search);
@@ -61,7 +60,6 @@ function NavigationBar(): JSX.Element {
 		State,
 		Dispatch<SetStateAction<State>>
 	] = useTracked();
-
 	const saveUser = async (token: string) => {
 		const res = await fetch(`${process.env.base_url}/user`, {
 			headers: {
@@ -123,7 +121,7 @@ function NavigationBar(): JSX.Element {
 			setState({ registerFeedback: register.message });
 		});
 	};
-	const themeChange: ChangeEventHandler<HTMLInputElement> = (e = null) => {
+	const themeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		if (e) {
 			if (e.target.checked) {
 				setGlobalState((s) => ({ ...s, theme: "dark_theme" }));
@@ -143,7 +141,7 @@ function NavigationBar(): JSX.Element {
 	};
 
 	useEffect(() => {
-		if (!stateGlobal.user && typeof document !== "undefined") {
+		if (!globalState.user && typeof document !== "undefined") {
 			if (document.cookie) {
 				let token: string;
 				try {
@@ -157,7 +155,7 @@ function NavigationBar(): JSX.Element {
 					})
 						.then((res) => res.json() as Promise<UserInterface>)
 						.then((data) => {
-							setStateGlobal((s) => ({ ...s, user: data }));
+							setGlobalState((s) => ({ ...s, user: data }));
 						})
 						.catch(console.log);
 				} catch (err) {
@@ -166,7 +164,7 @@ function NavigationBar(): JSX.Element {
 			}
 		}
 		themeChange(undefined);
-	}, [stateGlobal.user]);
+	}, [globalState.user, globalState.theme]);
 	return (
 		<>
 			<Modal show={showLogin} onHide={handleCloseLogin}>
@@ -318,13 +316,13 @@ function NavigationBar(): JSX.Element {
 							</label>
 						</Form>
 						<Nav>
-							{stateGlobal.user ? (
+							{globalState.user ? (
 								<NavDropdown
-									title={stateGlobal.user.username}
+									title={globalState.user.username}
 									id="profile"
 								>
 									<NavDropdown.Item
-										href={`/${stateGlobal.user.username}`}
+										href={`/${globalState.user.username}`}
 									>
 										<ImUser /> Profile
 									</NavDropdown.Item>
@@ -332,7 +330,7 @@ function NavigationBar(): JSX.Element {
 										<ImPencil /> New blog
 									</NavDropdown.Item>
 									<NavDropdown.Item
-										href={`/${stateGlobal.user.username}?edit=true`}
+										href={`/${globalState.user.username}?edit_user=true`}
 									>
 										<ImCog /> Settings
 									</NavDropdown.Item>
@@ -340,7 +338,7 @@ function NavigationBar(): JSX.Element {
 									<NavDropdown.Item
 										onClick={() => {
 											deleteCookie("token");
-											setStateGlobal((s) => ({
+											setGlobalState((s) => ({
 												...s,
 												user: null,
 											}));

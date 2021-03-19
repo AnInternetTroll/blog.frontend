@@ -1,4 +1,3 @@
-import "highlight.js/styles/stackoverflow-light.css";
 
 import { GetStaticProps } from "next";
 import Head from "next/head";

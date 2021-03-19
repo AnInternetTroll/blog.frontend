@@ -1,11 +1,14 @@
-import "highlight.js/styles/stackoverflow-light.css";
+import "easymde/dist/easymde.min.css";
 
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
+import { BlogEditor,UserProfile } from "../../../components/cards";
 import { useTracked } from "../../../components/state";
 import { formatMarkdown, getCookie } from "../../../components/utils";
 import {
@@ -25,6 +28,8 @@ function Blog({
 	if (err) return <p>Something went wrong</p>;
 	const [globalState] = useTracked();
 	const [feedback, setFeedback] = useState("");
+	const [isEdit, setIsEdit] = useState(false);
+
 	const deleteBlog = async () => {
 		const res = await fetch(
 			`${process.env.base_url}/blogs/${user.username}/${blog.short_name}`,
@@ -44,26 +49,42 @@ function Blog({
 			<Head>
 				<title>{user.username} - Assbook</title>
 			</Head>
-			<Card
-				bg={globalState.theme === "dark_theme" ? "dark" : "light"}
-				text={globalState.theme === "dark_theme" ? "light" : "dark"}
-			>
-				<Card.Header>{blog.name}</Card.Header>
-				<Card.Body
-					dangerouslySetInnerHTML={{
-						__html: formatMarkdown(blog.data),
-					}}
-				/>
-				{globalState.user?.id === (user.id || user._id) ? (
-					<>
-						{feedback}
-						<br />
-						<Button onClick={deleteBlog}>Delete</Button>
-					</>
-				) : (
-					""
-				)}
-			</Card>
+			<Row>
+				<Col lg={4}>
+					<UserProfile user={user} />
+				</Col>
+				<Col lg={8}>
+					<Card
+						bg={
+							globalState.theme === "dark_theme"
+								? "dark"
+								: "light"
+						}
+						text={
+							globalState.theme === "dark_theme"
+								? "light"
+								: "dark"
+						}
+					>
+						<Card.Header>{blog.name}</Card.Header>
+						{isEdit ? (<BlogEditor blog={blog} />) : (<Card.Body
+							dangerouslySetInnerHTML={{
+								__html: formatMarkdown(blog.data),
+							}}
+						/>)}
+						{globalState.user?.id === (user.id || user._id) ? (
+							<>
+								{feedback}
+								<br />
+								<Button onClick={deleteBlog} variant="danger">Delete</Button>
+								<Button onClick={() => setIsEdit(!isEdit)}>Edit</Button>
+							</>
+						) : (
+							""
+						)}
+					</Card>
+				</Col>
+			</Row>
 		</>
 	);
 }
