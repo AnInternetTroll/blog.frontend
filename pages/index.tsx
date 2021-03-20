@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps = async () => {
 				blogs: (await blogsRes.json()) as BlogInterface[],
 				err: null,
 			},
-			revalidate: 30,
+			revalidate: 5,
 		};
 	else return { props: { users: null, err: blogsRes.status } };
 };

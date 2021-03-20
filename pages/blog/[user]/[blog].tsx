@@ -83,13 +83,18 @@ function Blog({
 							{blog.name}
 							{feedback ? (
 								<>
-									<br /> 
+									<br />
 									{feedback}
 								</>
-								) : ""}
+							) : (
+								""
+							)}
 							{globalState.user?.id === (user.id || user._id) ? (
-								<span style={{float: "right", top: 0}}>
-									<Button onClick={deleteBlog} variant="danger">
+								<span style={{ float: "right", top: 0 }}>
+									<Button
+										onClick={deleteBlog}
+										variant="danger"
+									>
 										Delete
 									</Button>
 									{"	"}
@@ -151,7 +156,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 				blog: blogObj,
 				err: null,
 			},
-			revalidate: 30,
+			revalidate: 5,
 		};
 	else return { props: { user: null, err: blogRes.statusText } };
 };

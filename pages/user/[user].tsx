@@ -73,7 +73,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 				blogs,
 				err: null,
 			},
-			revalidate: 30,
+			revalidate: 5,
 		};
 	else return { props: { user: null, err: blogsRes.statusText } };
 };
