@@ -121,22 +121,47 @@ function NavigationBar(): JSX.Element {
 			setState({ registerFeedback: register.message });
 		});
 	};
-	const themeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+	//Fancy transition between dark mode and light mode
+	const trans = () => {
+		//Add class
+		document.documentElement.classList.add("transition");
+		//Wait for the animation to finish then remove the class
+		window.setTimeout(() => {
+		document.documentElement.classList.remove("transition");
+		}, 1000);
+	};
+
+	const themeChange = (e, theme: "dark_theme" | "light_theme") => {
+		trans();
 		if (e) {
 			if (e.target.checked) {
 				setGlobalState((s) => ({ ...s, theme: "dark_theme" }));
+				localStorage.setItem("theme", "dark_theme")
 				document.body.classList.add("dark_theme");
 				document.body.classList.remove("light_theme");
 			} else {
 				setGlobalState((s) => ({ ...s, theme: "light_theme" }));
+				localStorage.setItem("theme", "light_theme")
 				document.body.classList.add("light_theme");
 				document.body.classList.remove("dark_theme");
 			}
 		} else {
-			(document.getElementById(
-				"themeChange"
-			) as HTMLInputElement).checked = globalState.theme === "dark_theme";
-			document.body.classList.add(globalState.theme);
+			if (!theme) {
+				(document.getElementById(
+					"themeChange"
+				) as HTMLInputElement).checked = localStorage.getItem("theme") === "dark_theme";
+				setGlobalState((s) => ({ ...s, theme: localStorage.getItem("theme") as "dark_theme" | "light_theme"}));
+				document.body.classList.add(localStorage.getItem("theme"));
+			}
+			else {
+				localStorage.setItem("theme", theme)
+				setGlobalState((s) => ({ ...s, theme }));
+				document.body.classList.add(theme);
+				document.body.classList.remove(theme === "dark_theme" ? "light_theme" : "dark_theme");
+				(document.getElementById(
+					"themeChange"
+				) as HTMLInputElement).checked = localStorage.getItem("theme") === "dark_theme";
+			}
 		}
 	};
 
@@ -162,8 +187,15 @@ function NavigationBar(): JSX.Element {
 					console.log("No token found");
 				}
 			}
+			themeChange(undefined);
+			matchMedia("(prefers-color-scheme: dark)").onchange = (event) => {
+				if (event.matches) {
+					themeChange(undefined, "dark_theme");
+				} else {
+					themeChange(undefined, "light_theme");
+				}
+			  };
 		}
-		themeChange(undefined);
 	}, [globalState.user, globalState.theme]);
 	return (
 		<>
@@ -274,7 +306,7 @@ function NavigationBar(): JSX.Element {
 					</Form.Group>
 				</Form>
 			</Modal>
-			<Navbar bg="primary" variant="dark" expand="md">
+			<Navbar bg="primary" variant="dark" expand="md" sticky="top">
 				<Container fluid={false}>
 					<Navbar.Brand href="/">
 						<img
@@ -290,11 +322,6 @@ function NavigationBar(): JSX.Element {
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav
 							className="mr-auto"
-							activeKey={
-								typeof location !== "undefined"
-									? location.pathname
-									: "/"
-							}
 						>
 							<Nav.Link href="/">
 								<ImHome color="white" />

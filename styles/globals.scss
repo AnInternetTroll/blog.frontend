@@ -1,3 +1,11 @@
+html.transition,
+html.transition *,
+html.transition *:before,
+html.transition *:after {
+  transition: ease-in-out 200ms;
+  transition-delay: 0;
+}
+
 html,
 body {
 	padding: 0;
@@ -88,6 +96,14 @@ html.transition *:after {
 }
 /* Button end */
 
+/* Navbar modifications */
+
+nav {
+	a.nav-link svg {
+		vertical-align: initial !important;
+	}
+}
+
 /* Dark mode */
 body.dark_theme {
 	background-color: #323233;
@@ -105,11 +121,33 @@ body.dark_theme {
 		color: #fff;
 	}
 
+	input.form-control {
+		color: #fff !important;
+		border-color: rgb(172, 172, 172) !important;
+		background-color: #2b2b2b;
+	}
+	span.input-group-text {
+		border-color: rgb(172, 172, 172) !important;
+		background-color: #3b3b3b;
+	}
+	.card {
+		input.form-control {
+			color: #fff !important;
+			border-color: rgb(172, 172, 172) !important;
+			background-color: #2d3237;
+		}
+		.CodeMirror {
+			color: #fff !important;
+			border-color: rgb(172, 172, 172) !important;
+			background-color: #2d3237;
+		}
+	}
+
 	/* Markdown editor dark mode */
 	.CodeMirror {
-		color: #000 !important;
+		color: #fff !important;
 		border-color: rgb(172, 172, 172) !important;
-		background-color: "inherit" !important;
+		background-color: #2b2b2b;
 	}
 	.cm-s-easymde .CodeMirror-cursor {
 		border-color: rgb(172, 172, 172) !important;
