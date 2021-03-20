@@ -1,5 +1,4 @@
 import {
-	ChangeEventHandler,
 	Dispatch,
 	FormEvent,
 	SetStateAction,
@@ -14,12 +13,10 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {
-	ImCog,
 	ImExit,
 	ImHome,
 	ImPencil,
 	ImUser,
-	ImUserPlus,
 	ImUsers,
 } from "react-icons/im";
 
@@ -356,11 +353,6 @@ function NavigationBar(): JSX.Element {
 									<NavDropdown.Item href="/newblog">
 										<ImPencil /> New blog
 									</NavDropdown.Item>
-									<NavDropdown.Item
-										href={`/${globalState.user.username}?edit_user=true`}
-									>
-										<ImCog /> Settings
-									</NavDropdown.Item>
 									<NavDropdown.Divider />
 									<NavDropdown.Item
 										onClick={() => {
@@ -380,10 +372,6 @@ function NavigationBar(): JSX.Element {
 									<Nav.Link onClick={handleShowLogin}>
 										<ImUser color="white" />
 										Login
-									</Nav.Link>
-									<Nav.Link onClick={handleShowRegister}>
-										<ImUserPlus color="white" />
-										Register
 									</Nav.Link>
 								</>
 							)}
