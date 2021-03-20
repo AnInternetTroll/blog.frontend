@@ -131,7 +131,7 @@ function NavigationBar(): JSX.Element {
 		}, 1000);
 	};
 
-	const themeChange = (e, theme: "dark_theme" | "light_theme") => {
+	const themeChange = (e, theme?: "dark_theme" | "light_theme") => {
 		trans();
 		if (e) {
 			if (e.target.checked) {
