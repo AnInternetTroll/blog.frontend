@@ -1,3 +1,5 @@
+import "easymde/dist/easymde.min.css";
+
 import hljs from "highlight.js";
 import Head from "next/head";
 import {
@@ -337,39 +339,64 @@ export const UserProfile = ({
 	);
 };
 
-export const BlogEditor = ({ blog = null }: {blog?: BlogInterface} = {}): JSX.Element => {
-	const [feedback, setFeedback] = useState("");
+export function BlogEditor({
+	blog = null,
+}: { blog?: BlogInterface } = {}): JSX.Element {
 	const [globalState] = useTracked();
-	if (!globalState.user) return (<p>You must be logged in {blog ? "and own this blog to edit it" : ""}.</p>);
+	const [feedback, setFeedback] = useState("");
 	let descriptionEl: HTMLTextAreaElement;
 	let dataEl: HTMLTextAreaElement;
+	useEffect(() => {
+		dataEl = document.querySelector("textarea#data");
+		descriptionEl = document.querySelector("textarea#description");
+		if (
+			typeof document !== "undefined" &&
+			descriptionEl !== null &&
+			dataEl !== null
+		) {
+			descriptionEl.name = descriptionEl.id;
+			dataEl.name = dataEl.id;
+			if (blog) {
+				descriptionEl.value = blog.description;
+				dataEl.value = blog.data;
+			}
+		}
+	});
+	if (!globalState.user)
+		return (
+			<p>
+				You must be logged in{" "}
+				{blog ? "and own this blog to edit it" : ""}.
+			</p>
+		);
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
 		const form = Object.fromEntries(
 			new FormData(e.target as HTMLFormElement)
 		);
-		const res = await fetch(`${process.env.base_url}/blogs${blog ? `/${blog.author?.username || blog.author}/${blog.short_name}` : ""}`, {
-			method: blog ? "PATCH" : "POST",
-			headers: {
-				Authorization: `Bearer ${getCookie("token")}`,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(form),
-		});
+		const res = await fetch(
+			`${process.env.base_url}/blogs${
+				blog
+					? `/${blog.author?.username || blog.author}/${
+							blog.short_name
+					  }`
+					: ""
+			}`,
+			{
+				method: blog ? "PATCH" : "POST",
+				headers: {
+					Authorization: `Bearer ${getCookie("token")}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(form),
+			}
+		);
 		if (res.ok) {
 			setFeedback("Blog succesfully saved");
 			window.location.href = `/${globalState.user.username}/${form.short_name}`;
 		} else setFeedback((await res.json()).message);
 	};
-	useEffect(() => {
-		if (globalState.user) {
-			descriptionEl = document.querySelector("textarea#description");
-			dataEl = document.querySelector("textarea#data");
-			descriptionEl.name = descriptionEl.id;
-			dataEl.name = dataEl.id;
-		}
-	});
 	return (
 		<>
 			<Head>
@@ -434,7 +461,6 @@ export const BlogEditor = ({ blog = null }: {blog?: BlogInterface} = {}): JSX.El
 					/>
 					{feedback}
 					<br />
-					<br />
 					<Button type="submit">Submit</Button>
 				</Form>
 			) : (
@@ -443,4 +469,3 @@ export const BlogEditor = ({ blog = null }: {blog?: BlogInterface} = {}): JSX.El
 		</>
 	);
 }
-

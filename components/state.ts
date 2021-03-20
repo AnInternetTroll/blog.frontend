@@ -10,7 +10,7 @@ export interface State {
 
 const initialState: State = {
 	user: null,
-	theme: "dark_theme",
+	theme: "light_theme",
 };
 
 const useValue = () => useState(initialState);

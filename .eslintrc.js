@@ -22,7 +22,7 @@ module.exports = {
 		"simple-import-sort/imports": "error",
 		"simple-import-sort/exports": "error",
 		"no-mixed-spaces-and-tabs": "off",
-		"ts-ignore": 0,
+		"@typescript-eslint/ban-ts-comment": "off",
 	},
 	settings: {
 		react: {

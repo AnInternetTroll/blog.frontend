@@ -33,28 +33,13 @@ const User: NextPage<Props> = ({ user, blogs, err }: Props) => {
 				</Col>
 				{/* The body card */}
 				<Col lg={8}>
-					<Card
-						bg={
-							globalState.theme === "dark_theme"
-								? "dark"
-								: "light"
-						}
-						text={
-							globalState.theme === "dark_theme"
-								? "light"
-								: "dark"
-						}
-					>
-						<Card.Body>
-							<CardColumns>
-								{blogs.length !== 0
-									? blogs.map((blog) => (
-											<Blog blog={blog} key={blog.id} />
-									  ))
-									: "No blogs found"}
-							</CardColumns>
-						</Card.Body>
-					</Card>
+					<CardColumns>
+						{blogs.length !== 0
+							? blogs.map((blog) => (
+									<Blog blog={blog} key={blog.id} />
+							  ))
+							: "No blogs found"}
+					</CardColumns>
 				</Col>
 			</Row>
 		</>

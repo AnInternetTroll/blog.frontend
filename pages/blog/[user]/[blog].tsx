@@ -2,13 +2,13 @@ import "easymde/dist/easymde.min.css";
 
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-import { BlogEditor,UserProfile } from "../../../components/cards";
+import { BlogEditor, UserProfile } from "../../../components/cards";
 import { useTracked } from "../../../components/state";
 import { formatMarkdown, getCookie } from "../../../components/utils";
 import {
@@ -28,9 +28,22 @@ function Blog({
 	if (err) return <p>Something went wrong</p>;
 	const [globalState] = useTracked();
 	const [feedback, setFeedback] = useState("");
+	let searchParams: URLSearchParams;
+	if (typeof window !== "undefined")
+		searchParams = new URLSearchParams(window.location.search);
+	else searchParams = new URLSearchParams("");
 	const [isEdit, setIsEdit] = useState(false);
 
+	useEffect(() => {
+		setIsEdit(
+			(searchParams.get("edit_blog") &&
+				globalState.user?.id === (user.id || user._id)) ||
+				false
+		);
+	}, [globalState.user]);
+
 	const deleteBlog = async () => {
+		if (!confirm("Are you sure you want to delete this blog?")) return;
 		const res = await fetch(
 			`${process.env.base_url}/blogs/${user.username}/${blog.short_name}`,
 			{
@@ -66,21 +79,36 @@ function Blog({
 								: "dark"
 						}
 					>
-						<Card.Header>{blog.name}</Card.Header>
-						{isEdit ? (<BlogEditor blog={blog} />) : (<Card.Body
-							dangerouslySetInnerHTML={{
-								__html: formatMarkdown(blog.data),
-							}}
-						/>)}
-						{globalState.user?.id === (user.id || user._id) ? (
-							<>
-								{feedback}
-								<br />
-								<Button onClick={deleteBlog} variant="danger">Delete</Button>
-								<Button onClick={() => setIsEdit(!isEdit)}>Edit</Button>
-							</>
+						<Card.Header>
+							{blog.name}
+							{feedback ? (
+								<>
+									<br /> 
+									{feedback}
+								</>
+								) : ""}
+							{globalState.user?.id === (user.id || user._id) ? (
+								<span style={{float: "right", top: 0}}>
+									<Button onClick={deleteBlog} variant="danger">
+										Delete
+									</Button>
+									{"	"}
+									<Button onClick={() => setIsEdit(!isEdit)}>
+										Edit
+									</Button>
+								</span>
+							) : (
+								""
+							)}
+						</Card.Header>
+						{isEdit ? (
+							<BlogEditor blog={blog} />
 						) : (
-							""
+							<Card.Body
+								dangerouslySetInnerHTML={{
+									__html: formatMarkdown(blog.data),
+								}}
+							/>
 						)}
 					</Card>
 				</Col>
