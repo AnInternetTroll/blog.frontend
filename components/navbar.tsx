@@ -14,7 +14,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { ImExit, ImHome, ImPencil, ImUser, ImUsers } from "react-icons/im";
 
-import { deleteCookie, setCookie, sha256 } from "../components/utils";
+import { deleteCookie, setCookie, getCookie, sha256 } from "../components/utils";
 import { User as UserInterface } from "../models/api";
 import { State, useTracked } from "./state";
 
@@ -166,12 +166,10 @@ function NavigationBar(): JSX.Element {
 
 	useEffect(() => {
 		if (!globalState.user && typeof document !== "undefined") {
-			if (document.cookie) {
+			if (getCookie("token")) {
 				let token: string;
 				try {
-					token = document.cookie.match(
-						/(^|;) ?token=([^;]*)(;|$)/
-					)[2];
+					token = getCookie("token");
 					fetch(`${process.env.base_url}/user`, {
 						headers: {
 							Authorization: `Bearer ${token}`,

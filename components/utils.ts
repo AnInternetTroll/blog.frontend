@@ -21,24 +21,26 @@ export async function sha256(message: string): Promise<string> {
 	return hashHex;
 }
 /**
- * Get a cookie
+ * ~~Get a cookie~~ Changed to localStorage
  * @param name What cookie to get
  * @returns The value of the cookie
  */
 export function getCookie(name: string = null): string {
-	const v = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
-	return v ? v[2] : null;
+	return localStorage.getItem(name);
+	// const v = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
+	// return v ? v[2] : null;
 }
 /**
- * Set a cookie
+ * ~~Set a cookie~~ Changed to localStorage
  * @param name What cookie to set
  * @param value The value of it
  * @param seconds In seconds when to expire. Defaults to 3600 seconds (1 hour)
  */
 export function setCookie(name: string, value: string, seconds = 3600): void {
-	const d = new Date();
-	d.setTime(Date.now() + seconds * 100);
-	document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
+	localStorage.setItem(name, value);
+	// const d = new Date();
+	// d.setTime(Date.now() + seconds * 100);
+	// document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
 }
 /**
  * Replace a cookie with an empty string
